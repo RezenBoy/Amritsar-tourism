@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomePage</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-transparent fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Amritsar Sahib</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse D-flex justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="#">Sarai</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#services">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="loginForm.html">Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- navbar ending -->
+
+  <!-- starting wallpaper -->
+  <div class="position-relative">
+    <img src="/img/newpic03.jpg" class="d-block w-100" alt="..." style="height: 100vh; object-fit: fill;">
+    <!-- Gradient Overlay -->
+    <div class="position-absolute top-0 start-0 w-100 h-100"
+      style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));"></div>
+    <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20px; left: 20px;">
+      <h5 class="display-1 text-white" style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+        Darbar Sahib</h5>
+      <p class="lead text-white" style="font-size: 2rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);">Golden
+        Temple, Amritsar Sahib.</p>
+    </div>
+  </div>
+  <!-- ending wallpaper -->
+
+  <div class="lower-body">
+    <hr>
+    <br>
+    <!-- servieces section start -->
+    <div class="heading-text" id="services">Our Services</div>
+    <div class="services">
+      <div class="services-one">
+        <h1>Service 1</h1>
+      </div>
+      <div class="services-one">
+        <h1>Service 2</h1>
+      </div>
+      <div class="services-one">
+        <h1>Service 3</h1>
+      </div>
+      <div class="services-one">
+        <h1>Service 4</h1>
+      </div>
+    </div>
+    <!-- servieces section ending -->
+    <br>
+    <hr>
+    <br>
+    <!-- about section start -->
+    <div class="heading-text" id="about">About</div>
+
+    <div class="about-content">
+      <div class="about-left">
+        <img src="img/pic01.jpg" alt="">
+      </div>
+      <div class="about-right">
+        <p>Amritsar Sahib, founded in 1577 by Guru Ram Das, is a historic city in Punjab, India, known for its spiritual
+          and cultural significance. It is home to the Golden Temple, the holiest Sikh shrine, built by Guru Arjan Dev
+          and surrounded by the sacred Amrit Sarovar.</p>
+
+        <p>The city witnessed the tragic Jallianwala Bagh massacre in 1919 and is also famous for the Wagah Border
+          ceremony. Amritsar’s vibrant Punjabi culture is reflected in its delicious cuisine, including Amritsari kulcha
+          and lassi.</p>
+
+        <p>An economic hub, Amritsar thrives in textiles, carpets, and handicrafts. Well-connected by road, rail, and
+          air, it attracts millions of visitors annually. With its deep-rooted history, religious significance, and
+          lively culture, Amritsar Sahib remains a symbol of Sikh heritage and Indian patriotism.</p>
+      </div>
+    </div>
+    <!-- about section ending -->
+
+    <!-- map section start -->
+     <br><br>
+
+     <hr>
+     <br><br>
+    <div class="heading-text">Maps</div>
+
+    <div class="about-content">
+      <div class="about-right">
+        <p>Amritsar Sahib is located in the northwestern state of Punjab, India, near the India-Pakistan border. The city lies at approximately 31.63°N latitude and 74.87°E longitude, covering an area of about 170 square kilometers. It is well-connected by National Highway NH-3 and has a railway station linking it to major Indian cities.</p>
+
+        <p>The Golden Temple, the heart of the city, is centrally located, surrounded by key landmarks like Jallianwala Bagh and the Partition Museum. The Wagah Border lies around 28 km west, serving as the only road crossing between India and Pakistan.</p>
+
+        <p>Amritsar’s map features a mix of old city lanes and modern infrastructure, with bustling markets, historical sites, and green spaces. Sri Guru Ram Dass Jee International Airport connects it globally.</p>
+      </div>
+      <div class="about-left">
+        <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d448181.0611561977!2d74.87226449090692!3d31.633979249757246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391964aa536a26e7%3A0xc66e654aad4a3817!2sAmritsar%2C%20Punjab!5e0!3m2!1sen!2sin!4v1710964576573!5m2!1sen!2sin">
+      </iframe>
+      </div>
+    </div>
+    <!-- map section ending -->
+  </div>
+  <!-- starting footer -->
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h5>Contact Us</h5>
+          <p>Email: info@amritsarsahib.com</p>
+          <p>Phone: +91 12345 67890</p>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h5>Follow Us</h5>
+          <a href="https://www.facebook.com" target="_blank" class="text-white me-2">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com" target="_blank" class="text-white me-2">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+          <a href="https://www.instagram.com" target="_blank" class="text-white me-2">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://www.linkedin.com" target="_blank" class="text-white">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <h5>Address</h5>
+          <p>123, Golden Temple Road, Amritsar, Punjab, India </p>
+          <a
+            href="https://www.google.com/maps/place/Amritsar,+Punjab/@31.633544,74.87012,9z/data=!4m6!3m5!1s0x391964aa569e7355:0xeea2605bee84ef7d!8m2!3d31.6339793!4d74.8722642!16zL20vMDI5a3B5?hl=en&entry=ttu&g_ep=EgoyMDI1MDMyNS4xIKXMDSoASAFQAw%3D%3D">view
+            on Maps</a>
+        </div>
+      </div>
+      <div class="mt-3">
+        <p class="mb-0">&copy; 2025 Amritsar Sahib. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ending footer -->
+
+</html>

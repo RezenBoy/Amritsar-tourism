@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+}
+
+.lower-body {
+    display: block;
+    padding: 20px 90px 0 90px;
+}
+
+.heading-text {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.about-content {
+    display: flex;
+    /* Enables Flexbox */
+    align-items: center;
+    /* Aligns items vertically */
+    gap: 20px;
+    /* Space between image and text */
+    width: 80%;
+    /* Adjust width as needed */
+    margin: auto;
+    /* Centers the container */
+}
+
+.about-left {
+    width: 40%;
+    /* Adjust image container width */
+}
+
+.about-left img {
+    width: 100%;
+    /* Make image responsive within its container */
+    height: auto;
+    /* Maintain aspect ratio */
+    object-fit: cover;
+    /* Prevents stretching */
+    border-radius: 10px;
+    /* Optional: adds rounded corners */
+    margin-right: 5%;
+}
+
+.about-left iframe {
+    border: none;
+    /* Removes default border */
+    width: 100%;
+    /* Make video responsive within its container */
+    height: 300px;
+    /* Set a fixed height for the video */
+    border-radius: 10px;
+    /* Optional: adds rounded corners */
+    margin-left: 5%;
+}
+
+.about-right {
+    width: 60%;
+    /* Text takes more space */
+    /* padding-left: 5%; */
+}
+
+.about-right p {
+    font-size: 16px;
+    text-align: justify;
+    /* Justifies text for better readability */
+    line-height: 1.5;
+}
+
+
+.services {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* Spaces items evenly */
+    align-items: center;
+    /* Centers items vertically */
+    background-color: rgb(221, 173, 118);
+    height: 200px;
+    width: 100%;
+    margin: 20px 0;
+    padding: 20px;
+    /* Add padding for better spacing */
+}
+
+.services-one {
+    background-color: white;
+    padding: 20px;
+    height: 100%;
+    border-radius: 10px;
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+}

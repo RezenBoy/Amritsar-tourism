@@ -1,0 +1,130 @@
+body {
+  background: linear-gradient(135deg, #ff7700, #ffa500, #ffdd55);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+/* Container Styling */
+.container {
+  display: flex;
+  width: 50%;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Adds a slight shadow */
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 0;
+}
+
+/* Left Side (Welcome Text) */
+.left {
+  position: relative;
+  width: 50%;
+}
+.left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+  z-index: 1; /* Place it above the image */
+}
+.overlay-text {
+  position: absolute; /* Position the text relative to the container */
+  bottom: 0%; /* Center vertically */
+  left: 35%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Fine-tune centering */
+  color: white; /* Set text color */
+  text-align: left;
+  font-size: 28px; /* Adjust font size */
+  z-index: 2;
+}
+/* Right Side (Login Form) */
+.right {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  background-color: white;
+}
+/* Style input container */
+.input-container {
+  position: relative;
+  width: 87%;
+  /* margin-bottom: 15px; */
+}
+
+/* Style input fields */
+.input-container input {
+  width: 100%;
+  padding: 10px 10px 10px 40px; /* Push text right to avoid overlap */
+  border: 1px solid gray;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+/* Style icons inside inputs */
+.input-container .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: gray;
+  font-size: 14px;
+}
+
+.forgot {
+  display: flex;
+  justify-content: flex-end;
+}
+/* Button */
+#button {
+  background-color: #ffa500;
+  color: black;
+  font-size: 16px;
+  /* font-weight: 00; */
+  border-radius: 7px;
+  border: none;
+  height: 40px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+#button:hover {
+  background-color: rgb(255, 165, 0);
+}
+
+/* Bottom Text */
+#bottomText {
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Responsive Fix */
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    width: 90%;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  .left {
+    padding: 20px;
+  }
+}

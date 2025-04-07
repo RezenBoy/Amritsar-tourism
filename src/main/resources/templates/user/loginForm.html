@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="stylesheet" href=
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body background="img/card01.jpg">
+    <div class="container">
+        <div class="left">
+            <img src="/img/pic03.jpg" alt="">
+            <div class="overlay-text">
+                Welcome to<br>Amritsar Sahib.
+            </div>
+        </div>
+        <div class="right">
+            <form>
+                <h1>Login</h1>
+            
+                <!-- Username Field with Icon -->
+                <div class="input-container">
+                    <i class="fa fa-user icon"></i>
+                    <input type="text" name="username" placeholder="Enter ID" required>
+                </div>
+            <br>
+                <!-- Password Field with Icon -->
+                <div class="input-container">
+                    <i class="fa fa-lock icon"></i>
+                    <input type="password" name="password" placeholder="Enter Password" required>
+                </div>
+                <div class="forgot"><a id="bottomText" href="registerForm.html">Forgot password?</a></div>
+            
+                <button id="button" type="submit">Login</button>
+            
+                <p id="bottomText">Don't have an account? <a href="registerForm.html">Register</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
