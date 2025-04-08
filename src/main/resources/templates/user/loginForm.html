@@ -8,6 +8,11 @@
     <link rel="stylesheet" th:href="@{/css/form.css}">
     <link rel="stylesheet" href=
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        function showError(message) {
+            alert(message);
+        }
+    </script>
 </head>
 
 <body background="img/card01.jpg">
@@ -19,19 +24,20 @@
             </div>
         </div>
         <div class="right">
-            <form>
+            <form th:object="${user}" th:action="@{/login}" method="post">
+                
                 <h1>Login</h1>
             
                 <!-- Username Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-user icon"></i>
-                    <input type="text" name="username" placeholder="Enter ID" required>
+                    <input type="text" th:field="*{email}" placeholder="Enter ID" required>
                 </div>
             <br>
                 <!-- Password Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-lock icon"></i>
-                    <input type="password" name="password" placeholder="Enter Password" required>
+                    <input type="password" th:field="*{password}" placeholder="Enter Password" required>
                 </div>
                 <div class="forgot"><a id="bottomText" href="registerForm.html">Forgot password?</a></div>
             
@@ -39,6 +45,13 @@
             
                 <p id="bottomText">Don't have an account? <a href="registerForm.html">Register</a></p>
             </form>
+            <div th:if="${error}">
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    showError('[[${error}]]');
+                    /*]]>*/
+                </script>
+            </div>
         </div>
     </div>
 </body>

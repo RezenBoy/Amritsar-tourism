@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="right">
-            <form th:action="@{/register}" th:object="${user}" method="post">
+            <form th:object="${user}" th:action="@{/register}" method="post">
                 <h1>Create account</h1>
 
                 <!-- Name Field with Icon -->
