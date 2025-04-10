@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
     <link rel="stylesheet" th:href="@{/css/form.css}">
-    <link rel="stylesheet" href=
-    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         function showError(message) {
             alert(message);
@@ -25,25 +24,25 @@
         </div>
         <div class="right">
             <form th:object="${user}" th:action="@{/login}" method="post">
-                
+
                 <h1>Login</h1>
-            
+
                 <!-- Username Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-user icon"></i>
                     <input type="text" th:field="*{email}" placeholder="Enter ID" required>
                 </div>
-            <br>
+                <br>
                 <!-- Password Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-lock icon"></i>
                     <input type="password" th:field="*{password}" placeholder="Enter Password" required>
                 </div>
                 <div class="forgot"><a id="bottomText" href="registerForm.html">Forgot password?</a></div>
-            
+
                 <button id="button" type="submit">Login</button>
-            
-                <p id="bottomText">Don't have an account? <a href="registerForm.html">Register</a></p>
+
+                <p id="bottomText">Don't have an account? <a th:href="@{/register}">Register</a></p>
             </form>
             <div th:if="${error}">
                 <script th:inline="javascript">

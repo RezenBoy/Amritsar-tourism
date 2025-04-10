@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.LoginUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
@@ -25,7 +26,14 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public String registerUser(@ModelAttribute("user") RegisterUser user, Model model) {
+	public String registerUser(@ModelAttribute("user") RegisterUser user, Model model,
+			RedirectAttributes redirectAttributes) {
+		RegisterUser existingUser = userRepository.findByEmail(user.getEmail());
+
+		if (existingUser != null) {
+			redirectAttributes.addFlashAttribute("error", "User already exists with this email.");
+			return "redirect:/register";
+		}
 		userRepository.save(user);
 		model.addAttribute("message", "User registered successfully!");
 		return "redirect:/login";
@@ -47,7 +55,8 @@ public class UserController {
 			return "home/index"; // successful login
 		} else {
 			model.addAttribute("error", "Invalid email or password");
-			return "user/loginForm"; // go back to login page with error
+			// System.out.println("Invalid email or password");
+			return "redirect:/login"; // go back to login page with error
 		}
 	}
 

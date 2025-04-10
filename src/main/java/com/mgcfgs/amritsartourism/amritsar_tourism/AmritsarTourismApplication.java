@@ -10,5 +10,4 @@ public class AmritsarTourismApplication {
 		SpringApplication.run(AmritsarTourismApplication.class, args);
 		System.out.println("Amritsar Tourism Application is running...");
 	}
-
 }
