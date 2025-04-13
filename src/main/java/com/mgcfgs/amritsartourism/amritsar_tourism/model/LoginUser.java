@@ -1,7 +1,15 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginUser {
+
+    @NotBlank(message = "Enter email")
+    @Email(message = "Invalid email format")
     private String email;
+
+    @NotBlank(message = "Enter password")
     private String password;
 
     public LoginUser() {

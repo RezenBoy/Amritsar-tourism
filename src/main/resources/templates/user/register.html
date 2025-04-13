@@ -24,25 +24,33 @@
                 <!-- Name Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-user icon"></i>
-                    <input type="text" th:field="*{name}" placeholder="Enter Name" required>
+                    <input type="text" th:field="*{name}" placeholder="Enter Name">
+                    <span class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                 </div>
-                <br>
                 <!-- User ID Field with Icon -->
                 <div class="input-container">
                     <i class="fa fa-id-card icon"></i>
-                    <input type="text" th:field="*{email}" placeholder="Enter email" required>
+                    <input type="text" th:field="*{email}" placeholder="Enter email">
+                    <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    <span class="error-message" th:if="${emailError != null}" th:text="${emailError}"></span>
                 </div>
-                <br>
-                <!-- Password Field with Icon -->
+                <!-- Password Field -->
                 <div class="input-container">
                     <i class="fa fa-lock icon"></i>
-                    <input type="password" th:field="*{password}" placeholder="Enter Password" required>
+                    <input type="password" th:field="*{password}" placeholder="Enter Password" class="password-field"
+                        oninput="toggleEyeIcon(this)">
+                    <i class="fa fa-eye icon eye-icon toggle-password" style="display: none;"></i>
+                    <span class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                 </div>
-                <br>
-                <!-- Re-enter Password Field with Icon -->
+
+                <!-- Confirm Password Field -->
                 <div class="input-container">
                     <i class="fa fa-lock icon"></i>
-                    <input type="password" th:field="*{confirm_password}" placeholder="Re-enter Password" required>
+                    <input type="password" th:field="*{confirm_password}" placeholder="Re-enter Password"
+                        class="password-field" oninput="toggleEyeIcon(this)">
+                    <i class="fa fa-eye icon eye-icon toggle-password" style="display: none;"></i>
+                    <span class="error-message" th:if="${#fields.hasErrors('confirm_password')}"
+                        th:errors="*{confirm_password}"></span>
                 </div>
 
                 <button id="button" type="submit">Sign Up</button>
@@ -52,6 +60,7 @@
 
         </div>
     </div>
+    <script th:src="@{/javascript/user.js}"></script>
 </body>
 
 </html>

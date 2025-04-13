@@ -3,60 +3,100 @@ package com.mgcfgs.amritsartourism.amritsar_tourism.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.LoginUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
-import com.mgcfgs.amritsartourism.amritsar_tourism.repository.UserRepository;
+import com.mgcfgs.amritsartourism.amritsar_tourism.service.UserServices;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class UserController {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserServices userServices;
 
 	@GetMapping("/register")
 	public String registerPage(Model model) {
 		model.addAttribute("user", new RegisterUser());
-		return "user/registerForm";
+		return "user/register";
 	}
 
 	@PostMapping("/register")
-	public String registerUser(@ModelAttribute("user") RegisterUser user, Model model,
+	public String registerUser(
+			@Valid @ModelAttribute("user") RegisterUser user,
+			BindingResult result,
+			Model model,
 			RedirectAttributes redirectAttributes) {
-		RegisterUser existingUser = userRepository.findByEmail(user.getEmail());
 
-		if (existingUser != null) {
-			redirectAttributes.addFlashAttribute("error", "User already exists with this email.");
-			return "redirect:/register";
+		// 1. Return if there are validation errors (from @Valid annotations)
+		if (result.hasErrors()) {
+			return "user/register";
 		}
-		userRepository.save(user);
-		model.addAttribute("message", "User registered successfully!");
+
+		// 2. Check if passwords match
+		if (!user.getPassword().equals(user.getConfirm_password())) {
+			model.addAttribute("passwordError", "Passwords do not match");
+			return "user/register";
+		}
+
+		// 3. Check if user already exists
+		RegisterUser existingUser = userServices.findByEmail(user.getEmail());
+		if (existingUser != null) {
+			model.addAttribute("emailError", "User already exists with this email");
+			return "user/register";
+		}
+
+		// 4. Save user
+		userServices.saveUser(user);
+		redirectAttributes.addFlashAttribute("message", "User registered successfully!");
 		return "redirect:/login";
 	}
 
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		model.addAttribute("user", new LoginUser());
-		return "user/loginForm"; // return the login form view
+		return "user/login"; // return the login form view
 	}
 
 	@PostMapping("/login")
-	public String loginUser(@RequestParam String email,
-			@RequestParam String password,
+	public String loginUser(@Valid @ModelAttribute("user") LoginUser user,
+			BindingResult result,
+			HttpSession session,
+			RedirectAttributes redirectAttributes,
 			Model model) {
-		RegisterUser user = userRepository.findByEmail(email);
 
-		if (user != null && user.getPassword().equals(password)) {
-			return "home/index"; // successful login
+		if (result.hasErrors()) {
+			return "user/login"; // field validation errors
+		}
+
+		RegisterUser dbUser = userServices.findByEmail(user.getEmail());
+
+		if (dbUser == null) {
+			model.addAttribute("emailError", "User not found with this email");
+			return "user/login";
+		}
+
+		if (!dbUser.getPassword().equals(user.getPassword())) {
+			model.addAttribute("passwordError", "Incorrect password");
+			return "user/login";
+		}
+
+		// Save full user object in session after successful login
+		session.setAttribute("loggedInUser", dbUser);
+
+		if (dbUser.getRole().equals("ADMIN")) {
+			return "redirect:/admin"; // redirect to admin dashboard
 		} else {
-			model.addAttribute("error", "Invalid email or password");
-			// System.out.println("Invalid email or password");
-			return "redirect:/login"; // go back to login page with error
+			redirectAttributes.addFlashAttribute("message", "Login successful!");
+			return "redirect:/"; // redirect to home page
+
 		}
 	}
 

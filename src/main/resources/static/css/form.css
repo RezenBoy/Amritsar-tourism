@@ -1,34 +1,39 @@
 body {
   background: linear-gradient(135deg, #ff7700, #ffa500, #ffdd55);
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   justify-content: center;
   align-items: center;
   margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-/* Container Styling */
+/* Container Styling - Fixed overflow */
 .container {
   display: flex;
-  width: 50%;
+  width: 80%;
+  max-width: 900px;
   border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Adds a slight shadow */
-}
-
-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  z-index: 0;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  overflow: visible;
+  /* Changed from hidden */
 }
 
 /* Left Side (Welcome Text) */
 .left {
   position: relative;
   width: 50%;
+  min-height: 500px;
 }
+
+.left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .left::before {
   content: "";
   position: absolute;
@@ -37,86 +42,187 @@ img {
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
-  z-index: 1; /* Place it above the image */
+  z-index: 1;
 }
+
 .overlay-text {
-  position: absolute; /* Position the text relative to the container */
-  bottom: 0%; /* Center vertically */
-  left: 35%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Fine-tune centering */
-  color: white; /* Set text color */
-  text-align: left;
-  font-size: 28px; /* Adjust font size */
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  text-align: center;
+  font-size: 28px;
   z-index: 2;
+  width: 80%;
 }
-/* Right Side (Login Form) */
+
+/* Right Side (Form) - Fixed width */
 .right {
-  display: flex;
   width: 50%;
+  padding: 40px;
+  display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 20px;
-  background-color: white;
+  box-sizing: border-box;
+  /* Include padding in width calculation */
 }
-/* Style input container */
+
+.right h1 {
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 24px;
+}
+
+.input-container {
+  width: 100%;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.input-container input {
+  width: calc(100% - 40px);
+  /* Account for icon padding */
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  /* Include padding in width */
+}
+
 .input-container {
   position: relative;
-  width: 87%;
-  /* margin-bottom: 15px; */
+  /* Required for absolute positioning of children */
 }
 
-/* Style input fields */
-.input-container input {
+/* Ensure consistent box model */
+.input-container input,
+#button {
   width: 100%;
-  padding: 10px 10px 10px 40px; /* Push text right to avoid overlap */
-  border: 1px solid gray;
-  border-radius: 5px;
-  font-size: 12px;
 }
 
-/* Style icons inside inputs */
+.input-container input:focus {
+  border-color: #ffa500;
+  outline: none;
+}
+
 .input-container .icon {
   position: absolute;
-  left: 10px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: gray;
-  font-size: 14px;
+  color: #777;
+  font-size: 16px;
+  z-index: 1;
+  /* Ensure base icons stay above input */
 }
 
-.forgot {
-  display: flex;
-  justify-content: flex-end;
+/* Error Messages */
+.error-message {
+  display: block;
+  color: #ff3860;
+  font-size: 0.75em;
+  margin: 2px 0 0 40px;
+  /* Tight spacing, aligned with input */
+  height: 1em;
+  /* Fixed height to prevent layout shift */
+  line-height: 1em;
+  visibility: visible;
+  /* Hidden by default */
 }
+
+/* Specific style for the eye icon */
+.input-container .eye-icon {
+  left: auto;
+  /* Override left position */
+  right: 15px;
+  /* Position on right side */
+  z-index: 2;
+  /* Higher than lock icon */
+  cursor: pointer;
+}
+
+/* Adjust input padding to prevent text overlap */
+.input-container input[type="password"],
+.input-container input[type="text"] {
+  padding-left: 40px !important;
+  /* Space for left icon */
+  padding-right: 40px !important;
+  /* Space for eye icon */
+}
+
+
+/* Highlight invalid fields */
+.is-invalid {
+  border-color: #ff3860 !important;
+}
+
+/* Forgot password link */
+.forgot-password {
+  text-align: right;
+  margin: 5px 0 15px 0;
+  font-size: 0.9em;
+}
+
+/* Show error only when needed */
+.error-message[th|if] {
+  visibility: visible;
+}
+
+/* Input container adjustments */
+.input-container {
+  margin-bottom: 10px;
+  /* Consistent spacing */
+  position: relative;
+}
+
+/* Highlight invalid fields */
+input:invalid,
+.is-invalid {
+  border-color: #ff3860 !important;
+}
+
 /* Button */
 #button {
   background-color: #ffa500;
   color: black;
   font-size: 16px;
-  /* font-weight: 00; */
-  border-radius: 7px;
-  border: none;
-  height: 40px;
-  width: 100%;
+  border-radius: 5px;
   margin-top: 15px;
+  height: 45px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
 }
 
 #button:hover {
-  background-color: rgb(255, 165, 0);
+  background-color: #ff8c00;
 }
 
 /* Bottom Text */
 #bottomText {
-  font-size: 12px;
-  margin-top: 10px;
+  font-size: 14px;
+  margin-top: 20px;
   text-align: center;
+  color: #666;
 }
 
-/* Responsive Fix */
+#bottomText a {
+  color: #ffa500;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#bottomText a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
 @media screen and (max-width: 768px) {
   .container {
     flex-direction: column;
-    width: 90%;
+    width: 95%;
   }
 
   .left,
@@ -124,7 +230,44 @@ img {
     width: 100%;
   }
 
+  .right {
+    padding: 30px 20px;
+  }
+
   .left {
-    padding: 20px;
+    min-height: 200px;
+  }
+
+  .input-container input {
+    width: calc(100% - 40px);
+    /* Maintain consistency */
+  }
+
+  .overlay-text {
+    font-size: 20px;
+    bottom: 15%;
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+  .right {
+    padding: 25px 15px;
+  }
+
+  .right h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .input-container input {
+    padding: 10px 10px 10px 35px;
+    width: calc(100% - 35px);
+    /* Adjusted for smaller icon */
+  }
+
+  .input-container .icon {
+    left: 12px;
+    font-size: 14px;
   }
 }
