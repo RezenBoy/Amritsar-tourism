@@ -1,5 +1,6 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,6 +99,17 @@ public class UserController {
 			return "redirect:/"; // redirect to home page
 
 		}
+	}
+
+	@GetMapping("/delete-profile")
+	public String deleteProfile(HttpSession session) {
+		RegisterUser loggedInUser = (RegisterUser) session.getAttribute("loggedInUser");
+		if (loggedInUser != null) {
+			userServices.deleteUserById(loggedInUser.getId());
+			session.invalidate(); // clear session after deletion
+			return "redirect:/register?deleted"; // or home page
+		}
+		return "redirect:/login";
 	}
 
 }

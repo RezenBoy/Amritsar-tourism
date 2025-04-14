@@ -1,5 +1,7 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,4 +35,14 @@ public class UserServices {
         return registerUser;
 
     }
+
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public RegisterUser getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
+
 }

@@ -50,6 +50,10 @@ public class RegisterUser {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }    
+
     public String getName() {
         return name;
     }
@@ -90,8 +94,14 @@ public class RegisterUser {
         this.role = role;
     }
 
-}
+    @Override
+    public String toString() {
 
+        return "RegisterUser [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password
+                + ", confirm_password=" + confirm_password + ", role=" + role + "]";
+    }
+
+}
 
 // Query to Add Admin User to Database:
 
