@@ -1,12 +1,11 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServices {
@@ -34,6 +33,23 @@ public class UserServices {
         RegisterUser registerUser = userRepository.registerUser(email, password);
         return registerUser;
 
+    }
+
+    @Transactional
+    public void updateUserProfile(Long userId, String name, String email) {
+        RegisterUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Validate email uniqueness if changed
+        if (!user.getEmail().equals(email)) {
+            if (userRepository.existsByEmail(email)) {
+                throw new RuntimeException("Email " + email + " is already in use");
+            }
+        }
+        
+        user.setName(name);
+        user.setEmail(email);
+        userRepository.save(user);
     }
 
     public void deleteUserById(Long id) {

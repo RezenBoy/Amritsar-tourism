@@ -1,6 +1,5 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.LoginUser;
@@ -16,6 +16,8 @@ import com.mgcfgs.amritsartourism.amritsar_tourism.service.UserServices;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Controller
 public class UserController {
@@ -99,6 +101,34 @@ public class UserController {
 			return "redirect:/"; // redirect to home page
 
 		}
+	}
+
+	@PostMapping("/profile/update-profile")
+	public String updateProfile(
+			@RequestParam @NotBlank String name,
+			@RequestParam @Email @NotBlank String email,
+			HttpSession session,
+			RedirectAttributes redirectAttributes) {
+
+		try {
+			RegisterUser user = (RegisterUser) session.getAttribute("loggedInUser");
+			if (user == null) {
+				return "redirect:/login";
+			}
+
+			userServices.updateUserProfile(user.getId(), name, email);
+
+			// Update session with new data
+			user.setName(name);
+			user.setEmail(email);
+			session.setAttribute("loggedInUser", user);
+
+			redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Error updating profile: " + e.getMessage());
+		}
+
+		return "redirect:/profile";
 	}
 
 	@GetMapping("/delete-profile")
