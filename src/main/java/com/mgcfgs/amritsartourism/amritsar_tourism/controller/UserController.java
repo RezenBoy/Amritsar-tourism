@@ -95,7 +95,7 @@ public class UserController {
 		session.setAttribute("loggedInUser", dbUser);
 
 		if (dbUser.getRole().equals("ADMIN")) {
-			return "redirect:/admin"; // redirect to admin dashboard
+			return "redirect:/admin/dashboard"; // redirect to admin dashboard
 		} else {
 			redirectAttributes.addFlashAttribute("message", "Login successful!");
 			return "redirect:/"; // redirect to home page
@@ -108,7 +108,6 @@ public class UserController {
 		RegisterUser user = (RegisterUser) session.getAttribute("loggedInUser");
 
 		if (user != null) {
-			System.out.println(user);
 			model.addAttribute("user", user);
 		}
 
@@ -119,7 +118,7 @@ public class UserController {
 	public String update(RegisterUser user, Model model, HttpSession session) {
 
 		userServices.saveUser(user);
-
+		session.setAttribute("loggedInUser", user);
 		return "redirect:/profile";
 	}
 
