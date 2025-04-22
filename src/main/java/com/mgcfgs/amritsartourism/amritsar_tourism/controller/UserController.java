@@ -103,6 +103,26 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/open")
+	public String open(HttpSession session, Model model) {
+		RegisterUser user = (RegisterUser) session.getAttribute("loggedInUser");
+
+		if (user != null) {
+			System.out.println(user);
+			model.addAttribute("user", user);
+		}
+
+		return "user/updateProfile";
+	}
+
+	@PostMapping("/update")
+	public String update(RegisterUser user, Model model, HttpSession session) {
+
+		userServices.saveUser(user);
+
+		return "redirect:/profile";
+	}
+
 	@PostMapping("/profile/update-profile")
 	public String updateProfile(
 			@RequestParam @NotBlank String name,
