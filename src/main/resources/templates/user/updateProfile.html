@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>registerForm</title>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body background="img/card01.jpg">
+    <div class="container">
+        <div class="left">
+            <img src="/img/pic03.jpg" alt="">
+            <div class="overlay-text">
+                Connect to<br>Amritsar Sahib.
+            </div>
+        </div>
+        <div class="right">
+            <form th:object="${user}" th:action="@{update}"  method="post">
+                <h1>Create account</h1>
+
+                <!-- Name Field with Icon -->
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="input-container">
+                    <i class="fa fa-user icon"></i>
+                    <input type="text" th:field="*{name}" placeholder="Enter Name">
+                </div>
+                <!-- User ID Field with Icon -->
+                <div class="input-container">
+                    <i class="fa fa-id-card icon"></i>
+                    <input type="text" th:field="*{email}" placeholder="Enter email">
+                </div>
+                <!-- Password Field -->
+                <input type="hidden" th:field="*{password}" />
+                
+
+                <!-- Confirm Password Field -->
+                
+
+                <button id="button" type="submit">update Up</button>
+
+                <p id="bottomText">Already have an account? <a th:href="@{/login}">Login</a></p>
+            </form>
+
+        </div>
+    </div>
+    <script th:src="@{/javascript/user.js}"></script>
+</body>
+
+</html>

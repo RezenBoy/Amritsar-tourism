@@ -31,7 +31,7 @@ public class RegisterUser {
     private String password;
 
     @Transient // Do not persist confirm_password in DB
-    @NotEmpty(message = "Please confirm your password")
+    // @NotEmpty(message = "Please confirm your password")
     private String confirm_password;
 
     private String role = "USER"; // Default role
