@@ -1,7 +1,10 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.UserRepository;
 
@@ -62,6 +65,11 @@ public class UserServices {
         return user;
         // return userRepository.findById(id)
         //         .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
+
+    public List<RegisterUser> getAllUsers() {
+        // This method retrieves all users from the database.
+        return userRepository.findAll();
     }
 
 }

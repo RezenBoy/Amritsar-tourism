@@ -2,104 +2,207 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accomodation</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/accomodation.css}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accommodation</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/accomodation.css" />
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-white ">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Amritsar Sahib</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse D-flex justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="#">Sarai</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#services">Services</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#about">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="loginForm.html">Login</a>
-              </li>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-orange shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white" href="#">Amritsar Sahib</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/accomodation}">Sarai</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#services">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+
+          <!-- If user is logged in -->
+          <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span th:text="${session.loggedInUser.name}">Username</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
             </ul>
+          </li>
+
+          <!-- If user is not logged in -->
+          <li class="nav-item" th:if="${session.loggedInUser == null}">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Accommodation Listings -->
+  <section class="listing-section py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Available Accommodations</h2>
+      <div class="row g-4">
+        <!-- Card 1 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card accommodation-card shadow">
+            <img src="img/saragarhi sarai.png" class="card-img-top img-fluid orange-border" alt="Sarai">
+            <div class="card-body">
+              <h5 class="card-title">Saragarhi Sarai</h5>
+              <p class="card-text">Affordable stay close to Golden Temple. Clean rooms and peaceful environment.</p>
+              <p class="rating">⭐ 4.5 | ₹500/Night</p>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Saragarhi Sarai')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+            </div>
           </div>
         </div>
-      </nav>
-      <!-- navbar ending -->
-    <div class="background">
-        <h1 class="heading">Book Hotel and Home Stay</h1>
-        <div class="upper-div"> <!-- Bootstrap Grid -->
-            
-            <!-- Check-in Date -->
-            <div class="col-md-2">
-                <div class="form-floating">
-                    <input type="date" class="form-control" id="checkin" placeholder="Check-in Date">
-                    <label for="checkin">Check-in</label>
-                </div>
-            </div>
 
-            <!-- Check-out Date -->
-            <div class="col-md-2">
-                <div class="form-floating">
-                    <input type="date" class="form-control" id="checkout" placeholder="Check-out Date">
-                    <label for="checkout">Check-out</label>
-                </div>
+        <!-- Card 2 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card accommodation-card shadow">
+            <img src="img/guru arjan dev niwas.png" class="card-img-top img-fluid orange-border" alt="Guru Arjan Dev Niwas">
+            <div class="card-body">
+              <h5 class="card-title">Guru Arjan Dev Niwas</h5>
+              <p class="card-text">Comfortable stay with modern amenities. Close to Golden Temple.</p>
+              <p class="rating">⭐ 4.8 | ₹500/Night</p>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Guru Arjan Dev Niwas')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
             </div>
-
-            <!-- Adults Selection -->
-            <div class="col-md-2">
-                <div class="form-floating">
-                    <select class="form-select" id="adults">
-                        <option selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <label for="adults">Adults</label>
-                </div>
-            </div>
-
-            <!-- Children Selection -->
-            <div class="col-md-2">
-                <div class="form-floating">
-                    <select class="form-select" id="children">
-                        <option selected>0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                    </select>
-                    <label for="children">Children</label>
-                </div>
-            </div>
-
-            <!-- Number of Rooms -->
-            <div class="col-md-2">
-                <div class="form-floating">
-                    <select class="form-select" id="rooms">
-                        <option selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <label for="rooms">Rooms</label>
-                </div>
-            </div>
-            <button>
-                    SEARCH
-            </button>
+          </div>
         </div>
-    </div>
 
+        <!-- Card 3 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card accommodation-card shadow">
+            <img src="img/amritsari hawali.png" class="card-img-top img-fluid orange-border" alt="Amritsari Hawali">
+            <div class="card-body">
+              <h5 class="card-title">Amritsari Hawali</h5>
+              <p class="card-text">Luxury hotel with modern amenities and Golden Temple view rooftop.</p>
+              <p class="rating">⭐ 4.8 | ₹1800/Night</p>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Amritsari Hawali')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Receipt Modal -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title" id="receiptModalLabel">Booking Receipt</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="bookingForm">
+            <div class="mb-3">
+              <label for="adultsCount" class="form-label">Adults Count</label>
+              <input type="number" id="adultsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
+            </div>
+            <div class="mb-3">
+              <label for="childrenCount" class="form-label">Children Count</label>
+              <input type="number" id="childrenCount" class="form-control" min="0" value="0" oninput="updateTotal()" />
+            </div>
+            <div class="mb-3">
+              <label for="roomsCount" class="form-label">Rooms Count</label>
+              <input type="number" id="roomsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
+            </div>
+            <div class="mb-3">
+              <label for="checkInDate" class="form-label">Check-in Date</label>
+              <input type="date" id="checkInDate" class="form-control" required oninput="updateTotal()" />
+            </div>
+            <div class="mb-3">
+              <label for="checkOutDate" class="form-label">Check-out Date</label>
+              <input type="date" id="checkOutDate" class="form-control" required oninput="updateTotal()" />
+            </div>
+            <div class="mb-3">
+              <h5>Total Amount: ₹<span id="totalAmount">0</span></h5>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-success" onclick="generateReceipt()">Confirm</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+  <!-- Your custom JS -->
+  <script>
+    function showReceipt(accommodationName) {
+      // Set the accommodation name when the book button is clicked
+      document.getElementById("modalAccommodationName").innerText = accommodationName;
+      // Initialize the form with default values
+      document.getElementById("adultsCount").value = 1;
+      document.getElementById("childrenCount").value = 0;
+      document.getElementById("roomsCount").value = 1;
+      document.getElementById("checkInDate").value = '';
+      document.getElementById("checkOutDate").value = '';
+      document.getElementById('totalAmount').innerText = '0';
+    }
+
+    // Function to update total amount based on user input
+    function updateTotal() {
+      let adults = parseInt(document.getElementById('adultsCount').value);
+      let children = parseInt(document.getElementById('childrenCount').value);
+      let rooms = parseInt(document.getElementById('roomsCount').value);
+      let checkInDate = new Date(document.getElementById('checkInDate').value);
+      let checkOutDate = new Date(document.getElementById('checkOutDate').value);
+      
+      // Calculate the total nights
+      let totalNights = (checkOutDate - checkInDate) / (1000 * 3600 * 24);
+      if (totalNights <= 0) {
+        alert("Check-out date must be after check-in date.");
+        return;
+      }
+
+      // Calculate the total cost
+      let pricePerNight = 500; // Set the room price here
+      let totalAmount = totalNights * rooms * pricePerNight;
+
+      // Update the total amount
+      document.getElementById('totalAmount').innerText = totalAmount;
+    }
+
+    function generateReceipt() {
+      // Generate and show the receipt
+      let adults = parseInt(document.getElementById('adultsCount').value);
+      let children = parseInt(document.getElementById('childrenCount').value);
+      let rooms = parseInt(document.getElementById('roomsCount').value);
+      let checkInDate = document.getElementById('checkInDate').value;
+      let checkOutDate = document.getElementById('checkOutDate').value;
+      let totalAmount = document.getElementById('totalAmount').innerText;
+      
+      alert(`Receipt:
+      Accommodation: ${document.getElementById("modalAccommodationName").innerText}
+      Adults: ${adults}, Children: ${children}, Rooms: ${rooms}
+      Check-in: ${checkInDate}, Check-out: ${checkOutDate}
+      Total Amount: ₹${totalAmount}`);
+    }
+  </script>
 </body>
 
 </html>
