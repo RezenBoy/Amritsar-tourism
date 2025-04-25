@@ -67,10 +67,12 @@
   }
   .navbar {
     background-color: #FFA500; 
+    padding: 15px 20px;
   }
   .navbar .navbar-brand,
   .navbar .nav-link {
     color: white; 
+    font-weight: bold;
   }
   
   .navbar .nav-link:hover {

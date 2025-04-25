@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Rooms - Admin Panel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .admin-header {
+            background-color: #d2691e;
+            /* Orange/brown color similar to your screenshot */
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .admin-sidebar {
+            background-color: #343a40;
+            /* Dark color similar to your screenshot */
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .admin-sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background-color: #d2691e;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include navbar fragment -->
+    <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include sidebar fragment -->
+            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='rooms'" class="col-md-2">
+            </div>
+
+            <!-- Main content area -->
+            <main class="col-md-10">
+                <div class="admin-content">
+                    <div class="container-fluid">
+                        <!-- Page Header -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h2>Manage Rooms</h2>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Manage Rooms</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                <a th:href="@{/admin/addroom}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-1"></i> Add New Room
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <!-- Search and Filter -->
+                        <div class="card search-filters">
+                            <div class="card-body">
+                                <form th:action="@{/admin/rooms}" method="get" class="row g-3 align-items-end">
+                                    <div class="col-md-3">
+                                        <label for="roomNumber" class="form-label">Room Number</label>
+                                        <input type="text" class="form-control" id="roomNumber" name="roomNumber"
+                                            th:value="${param.roomNumber}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="type" class="form-label">Room Type</label>
+                                        <select class="form-select" id="type" name="type">
+                                            <option value="">All Types</option>
+                                            <option value="Single" th:selected="${param.type == 'Single'}">Single
+                                            </option>
+                                            <option value="Double" th:selected="${param.type == 'Double'}">Double
+                                            </option>
+                                            <option value="Triple" th:selected="${param.type == 'Triple'}">Triple
+                                            </option>
+                                            <option value="Deluxe" th:selected="${param.type == 'Deluxe'}">Deluxe
+                                            </option>
+                                            <option value="Suite" th:selected="${param.type == 'Suite'}">Suite</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select class="form-select" id="category" name="category">
+                                            <option value="">All Categories</option>
+                                            <option value="AC" th:selected="${param.category == 'AC'}">AC</option>
+                                            <option value="Non-AC" th:selected="${param.category == 'Non-AC'}">Non-AC
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="availability" class="form-label">Availability</label>
+                                        <select class="form-select" id="availability" name="available">
+                                            <option value="">All</option>
+                                            <option value="true" th:selected="${param.available == 'true'}">Available
+                                            </option>
+                                            <option value="false" th:selected="${param.available == 'false'}">Occupied
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary w-50">
+                                                <i class="bi bi-search me-1"></i> Search
+                                            </button>
+                                            <a th:href="@{/admin/rooms}" class="btn btn-outline-secondary w-50">
+                                                <i class="bi bi-x-circle me-1"></i> Clear
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Rooms Table -->
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Room List</span>
+                                <span class="badge bg-primary"
+                                    th:text="${rooms != null ? rooms.size() : 0} + ' Room(s)'"></span>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Room No.</th>
+                                                <th>Type</th>
+                                                <th>Category</th>
+                                                <th>Capacity</th>
+                                                <th>Price/Night</th>
+                                                <th>Status</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${rooms == null || rooms.empty}">
+                                                <td colspan="7" class="text-center">No rooms found</td>
+                                            </tr>
+                                            <tr th:each="room : ${rooms}">
+                                                <td th:text="${room.roomNumber}">101</td>
+                                                <td th:text="${room.type}">Double</td>
+                                                <td th:text="${room.category}">AC</td>
+                                                <td th:text="${room.capacity}">2</td>
+                                                <td>₹<span th:text="${room.pricePerNight}">1500.00</span></td>
+                                                <td>
+                                                    <span th:if="${room.available}"
+                                                        class="badge bg-success status-badge">Available</span>
+                                                    <span th:unless="${room.available}"
+                                                        class="badge bg-danger status-badge">Occupied</span>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons d-flex justify-content-center gap-2">
+                                                        <!-- <a th:href="@{/admin/rooms/{id}/view(id=${room.id})}" class="btn btn-sm btn-info text-white" title="View Details">
+                              <i class="bi bi-eye"></i>
+                            </a> -->
+                                                        <a th:href="@{/admin/rooms/{id}/edit(id=${room.id})}"
+                                                            class="btn btn-sm btn-warning text-white" title="Edit">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-danger delete-room-btn"
+                                                            th:data-room-id="${room.id}"
+                                                            th:data-room-number="${room.roomNumber}" title="Delete"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteRoomModal">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <nav th:if="${totalPages > 1}" aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/rooms(page=${currentPage - 1}, size=${size}, roomNumber=${param.roomNumber}, type=${param.type}, category=${param.category}, available=${param.available})}"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                                            th:classappend="${pageNumber == currentPage} ? 'active'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/rooms(page=${pageNumber}, size=${size}, roomNumber=${param.roomNumber}, type=${param.type}, category=${param.category}, available=${param.available})}"
+                                                th:text="${pageNumber}"></a>
+                                        </li>
+                                        <li class="page-item"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/rooms(page=${currentPage + 1}, size=${size}, roomNumber=${param.roomNumber}, type=${param.type}, category=${param.category}, available=${param.available})}"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteRoomModal" tabindex="-1" aria-labelledby="deleteRoomModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteRoomModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete Room <span id="deleteRoomNumber" class="fw-bold"></span>?</p>
+                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteRoomForm" th:action="@{/admin/rooms/delete}" method="post">
+                        <input type="hidden" id="roomIdToDelete" name="roomId">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up delete modal
+            const deleteButtons = document.querySelectorAll('.delete-room-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const roomId = this.getAttribute('data-room-id');
+                    const roomNumber = this.getAttribute('data-room-number');
+
+                    document.getElementById('roomIdToDelete').value = roomId;
+                    document.getElementById('deleteRoomNumber').textContent = roomNumber;
+                });
+            });
+
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const closeButton = alert.querySelector('.btn-close');
+                    if (closeButton) {
+                        closeButton.click();
+                    }
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+
+</html>

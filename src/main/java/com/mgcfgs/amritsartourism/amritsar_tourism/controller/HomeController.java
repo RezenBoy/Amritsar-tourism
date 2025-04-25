@@ -34,4 +34,14 @@ public class HomeController {
         return "redirect:/";
     }
 
+    @GetMapping("/accommodation")
+    public String accommodationPage() {
+        return "home/accommodation"; // create accommodation.html page in templates/home
+    }
+
+    @GetMapping("/about")
+    public String aboutPage() {
+        return "home/about"; // create about.html page in templates/home
+    }
+
 }

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Amritsar - Historical Journey</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/accomodation.css" />
+
+  <style>
+    /* Basic styles for when external CSS isn't available */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    p {
+      text-align: justify;
+    }
+
+    .about-section {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .heading-text {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #d5a021;
+      margin-bottom: 10px;
+    }
+
+    .subheading {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .timeline-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tab-button {
+      background-color: #f8f8f8;
+      border: 2px solid #d5a021;
+      color: black;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-button:hover {
+      background-color: #f0e5c9;
+    }
+
+    .tab-button.active {
+      background-color: #d5a021;
+      color: black;
+    }
+
+    .history-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .history-section.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 768px) {
+      .history-section.active {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+      }
+    }
+
+    .section-figure {
+      margin: 0;
+      flex: 1;
+    }
+
+    .section-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-caption {
+      text-align: center;
+      margin-top: 10px;
+      font-style: italic;
+      color: #666;
+    }
+
+    .section-text {
+      flex: 2;
+    }
+
+    .section-title {
+      color: #d5a021;
+      margin-bottom: 15px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="fragments/user_navbar :: navbar"></div>
+  <br><br><br>
+  <section class="about-section">
+    <h1 class="heading-text">About Amritsar</h1>
+    <p class="subheading">Explore the historical journey of Amritsar through time.</p>
+
+    <!-- Timeline Navigation -->
+    <div class="timeline-buttons">
+      <button class="tab-button active" data-target="origin">ੴ Origin</button>
+      <button class="tab-button" data-target="british">🇬🇧 British Era</button>
+      <button class="tab-button" data-target="modern">🏙 Modern Day</button>
+    </div>
+
+    <!-- Dynamic Sections -->
+    <div class="history-section active" id="origin">
+      <figure class="section-figure">
+        <img src="img/guru-ram-dass.jpg" alt="Guru Ram Das" class="section-img">
+        <figcaption class="section-caption">Guru Ram Das, founder of Amritsar</figcaption>
+      </figure>
+      <div class="section-text">
+        <h2 class="section-title">The Origin of Amritsar</h2>
+        <p>Guru Ram Das, the fourth Sikh Guru, was born as Bhai Jetha on 24 September 1534 in Lahore (now in Pakistan).
+          Orphaned at a young age, he was raised by a kind woman who instilled in him the values of hard work and faith.
+        </p>
+        <p>As a young man, he met Guru Amar Das, the third Sikh Guru, and became his devoted disciple. He later married
+          Bibi Bhani, the daughter of Guru Amar Das, and became an integral part of the Guru's family. Impressed by his
+          humility, devotion, and dedication to service, Guru Amar Das appointed him as his successor in 1574, giving
+          him the name Guru Ram Das.</p>
+        <p>As Guru, he made significant contributions to Sikhism and laid the foundation for what would become the
+          spiritual and cultural heart of the Sikh community. He selected the site for a new settlement and began
+          constructing a sacred tank called <em>Amrit Sarovar</em>, or "Pool of Nectar." Around this tank grew a town
+          that would eventually become the city of Amritsar.</p>
+        <p>Guru Ram Das passed away on 1 September 1581, but his legacy lives on through the city of Amritsar, which
+          stands as a testament to his vision and spiritual leadership.</p>
+      </div>
+    </div>
+
+    <div class="history-section" id="british">
+      <figure class="section-figure">
+        <img src="img/jallianwala-bagh.jpg" alt="Jallianwala Bagh" class="section-img">
+        <figcaption class="section-caption">Jallianwala Bagh memorial</figcaption>
+      </figure>
+      <div class="section-text">
+        <h2 class="section-title">British Colonial Period</h2>
+        <p>The British colonial era marked a significant and often painful chapter in Amritsar's history. The city
+          became a center of resistance against colonial rule, with its residents actively participating in India's
+          struggle for independence.</p>
+        <p>The darkest day in Amritsar's colonial history was April 13, 1919, when British troops under General Dyer
+          opened fire on a peaceful gathering at Jallianwala Bagh, killing hundreds of unarmed civilians who had
+          assembled for a festival. This unprovoked massacre became a turning point in India's freedom movement,
+          galvanizing nationalist sentiment across the country.</p>
+        <p>Throughout the remainder of British rule, Amritsar continued to be a significant site for nationalist
+          activities. The city's strategic importance, both as a cultural center and as a border city close to Pakistan,
+          ensured its prominence in the political landscape of pre-independence India.</p>
+      </div>
+    </div>
+
+    <div class="history-section" id="modern">
+      <figure class="section-figure">
+        <img src="img/modern-amritsar.webp" alt="Modern Amritsar" class="section-img">
+        <figcaption class="section-caption">Modern-day Amritsar</figcaption>
+      </figure>
+      <div class="section-text">
+        <h2 class="section-title">Modern Amritsar</h2>
+        <p>Today, Amritsar stands as a vibrant city that beautifully blends its rich historical heritage with
+          contemporary development. The Golden Temple (Harmandir Sahib) remains the spiritual epicenter, attracting
+          millions of visitors from around the world each year.</p>
+        <p>Beyond its religious significance, Amritsar has evolved into an important commercial hub. The city is
+          renowned for its textile industry, especially for Punjabi suits, shawls, and blankets. Its culinary scene is
+          famous worldwide, with specialties like Amritsari kulcha, fish, and various Punjabi delicacies drawing food
+          enthusiasts from everywhere.</p>
+        <p>The Wagah Border ceremony, held daily at the India-Pakistan border near Amritsar, has become a patriotic
+          spectacle symbolizing the complex relationship between the two nations. Modern Amritsar continues to play a
+          crucial role in Indo-Pak relations due to its proximity to the border.</p>
+        <p>Despite facing numerous challenges throughout its history, Amritsar remains resilient—a testament to the
+          enduring spirit of its people and their dedication to preserving their cultural identity while embracing
+          progress.</p>
+      </div>
+    </div>
+  </section>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".tab-button");
+      const sections = document.querySelectorAll(".history-section");
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          // Remove active class from all buttons and sections
+          buttons.forEach(btn => btn.classList.remove("active"));
+          sections.forEach(sec => sec.classList.remove("active"));
+
+          // Add active class to clicked button and corresponding section
+          button.classList.add("active");
+          const targetSection = document.getElementById(button.dataset.target);
+          if (targetSection) {
+            targetSection.classList.add("active");
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

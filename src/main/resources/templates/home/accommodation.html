@@ -15,47 +15,8 @@
 
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-orange shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand text-white" href="#">Amritsar Sahib</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" th:href="@{/accomodation}">Sarai</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#services">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
-          </li>
-
-          <!-- If user is logged in -->
-          <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <span th:text="${session.loggedInUser.name}">Username</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="/profile">Profile</a></li>
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
-            </ul>
-          </li>
-
-          <!-- If user is not logged in -->
-          <li class="nav-item" th:if="${session.loggedInUser == null}">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
+  <div th:replace="fragments/user_navbar :: navbar"></div>
+<br>
   <!-- Accommodation Listings -->
   <section class="listing-section py-5 bg-light">
     <div class="container">
@@ -114,13 +75,13 @@
         <div class="modal-body">
           <form id="bookingForm">
             <div class="mb-3">
-              <label for="adultsCount" class="form-label">Adults Count</label>
+              <label for="adultsCount" class="form-label">Total visitor's</label>
               <input type="number" id="adultsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="childrenCount" class="form-label">Children Count</label>
               <input type="number" id="childrenCount" class="form-control" min="0" value="0" oninput="updateTotal()" />
-            </div>
+            </div> -->
             <div class="mb-3">
               <label for="roomsCount" class="form-label">Rooms Count</label>
               <input type="number" id="roomsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
@@ -157,7 +118,7 @@
       document.getElementById("modalAccommodationName").innerText = accommodationName;
       // Initialize the form with default values
       document.getElementById("adultsCount").value = 1;
-      document.getElementById("childrenCount").value = 0;
+      // document.getElementById("childrenCount").value = 0;
       document.getElementById("roomsCount").value = 1;
       document.getElementById("checkInDate").value = '';
       document.getElementById("checkOutDate").value = '';
@@ -167,7 +128,7 @@
     // Function to update total amount based on user input
     function updateTotal() {
       let adults = parseInt(document.getElementById('adultsCount').value);
-      let children = parseInt(document.getElementById('childrenCount').value);
+      // let children = parseInt(document.getElementById('childrenCount').value);
       let rooms = parseInt(document.getElementById('roomsCount').value);
       let checkInDate = new Date(document.getElementById('checkInDate').value);
       let checkOutDate = new Date(document.getElementById('checkOutDate').value);
@@ -190,7 +151,7 @@
     function generateReceipt() {
       // Generate and show the receipt
       let adults = parseInt(document.getElementById('adultsCount').value);
-      let children = parseInt(document.getElementById('childrenCount').value);
+      // let children = parseInt(document.getElementById('childrenCount').value);
       let rooms = parseInt(document.getElementById('roomsCount').value);
       let checkInDate = document.getElementById('checkInDate').value;
       let checkOutDate = document.getElementById('checkOutDate').value;
@@ -198,7 +159,8 @@
       
       alert(`Receipt:
       Accommodation: ${document.getElementById("modalAccommodationName").innerText}
-      Adults: ${adults}, Children: ${children}, Rooms: ${rooms}
+      // Adults: ${adults}, Children: ${children}, Rooms: ${rooms}
+      Adults: ${adults}, Rooms: ${rooms}
       Check-in: ${checkInDate}, Check-out: ${checkOutDate}
       Total Amount: ₹${totalAmount}`);
     }

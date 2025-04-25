@@ -1,0 +1,49 @@
+<!-- fragments/navbar.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <nav class="navbar navbar-expand-lg fixed-top" id="navbar" th:fragment="navbar">
+        
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-orange" href="#">Amritsar Sahib</a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/accommodation}">Sarai</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/#services}">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/about}">About</a>
+            </li>
+
+            <!-- If user is logged in -->
+            <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span th:text="${session.loggedInUser.name}">Username</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+
+            <!-- If user is not logged in -->
+            <li class="nav-item" th:if="${session.loggedInUser == null}">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </body>
+</html>

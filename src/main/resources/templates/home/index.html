@@ -22,52 +22,23 @@
       }
     });
   </script>
+  <style>
+    .navbar .nav-link:hover {
+      color: #333;
+    }
+
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+      color: white;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-orange" href="#">Amritsar Sahib</a>
-      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-        data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <div th:replace="fragments/user_navbar :: navbar"></div>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active" th:href="@{/}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/accomodation}">Sarai</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#services">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
-          </li>
-
-          <!-- If user is logged in -->
-          <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <span th:text="${session.loggedInUser.name}">Username</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="/profile">Profile</a></li>
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
-            </ul>
-          </li>
-
-          <!-- If user is not logged in -->
-          <li class="nav-item" th:if="${session.loggedInUser == null}">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
 
 
   <!-- Wallpaper Section -->
@@ -93,27 +64,30 @@
 
   <div class="lower-body">
     <hr>
-    <br>
     <!-- Services Section -->
-    <div class="text-center mb-5">
-      <h2 class="display-5 fw-bold">Our Services</h2>
-      <div class="divider mx-auto"></div>
-    </div>
+    <section id="services" class="py-5 bg-light">
+      <br>
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Our Services</h2>
+        <div class="divider mx-auto"></div>
+      </div>
 
-    <div class="services">
-      <div class="services-one">
-        <h3>Room Booking</h3>
-        <p>Effortlessly manage room availability, bookings, and cancellations in real-time.</p>
+      <div class="services">
+        <div class="services-one">
+          <h3>Room Booking</h3>
+          <p>Effortlessly manage room availability, bookings, and cancellations in real-time.</p>
+        </div>
+        <div class="services-one">
+          <h3>Customer Support</h3>
+          <p>Ensure guest satisfaction with 24/7 automated and manual support solutions.</p>
+        </div>
+        <div class="services-one">
+          <h3>Billing & Reports</h3>
+          <p>Generate detailed invoices, track payments, and gain insights through analytics.</p>
+        </div>
       </div>
-      <div class="services-one">
-        <h3>Customer Support</h3>
-        <p>Ensure guest satisfaction with 24/7 automated and manual support solutions.</p>
-      </div>
-      <div class="services-one">
-        <h3>Billing & Reports</h3>
-        <p>Generate detailed invoices, track payments, and gain insights through analytics.</p>
-      </div>
-    </div>
+    </section>
+
     <br>
     <hr>
     <br>
@@ -137,7 +111,7 @@
                 shrine, built by Guru Arjan Dev and surrounded by the sacred Amrit Sarovar.</p>
               <p>The city witnessed the tragic Jallianwala Bagh massacre in 1919 and is also famous for the Wagah Border
                 ceremony, a daily military practice that attracts visitors from around the world.</p>
-              <a href="about.html" class="btn btn-warning mt-3">
+              <a th:href="@{/about}" class="btn btn-warning mt-3">
                 Read More <i class="fas fa-arrow-right ms-2"></i>
               </a>
             </div>

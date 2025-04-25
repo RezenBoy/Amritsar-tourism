@@ -1,0 +1,61 @@
+.admin-header {
+  background-color: #d2691e;
+  color: white;
+  padding: 15px;
+  font-weight: bold;
+}
+.admin-sidebar {
+  background-color: #343a40;
+  color: white;
+  min-height: 100vh;
+  padding: 0;
+}
+.admin-sidebar a {
+  color: white;
+  text-decoration: none;
+  padding: 15px 20px;
+  display: block;
+  transition: all 0.3s;
+}
+.admin-sidebar a:hover,
+.admin-sidebar a.active {
+  background-color: #d2691e;
+}
+.admin-content {
+  padding: 20px;
+}
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: bold;
+}
+.btn-primary {
+  background-color: #d2691e;
+  border-color: #d2691e;
+}
+.btn-primary:hover {
+  background-color: #bd5e1a;
+  border-color: #bd5e1a;
+}
+.table-responsive {
+  overflow-x: auto;
+}
+.status-badge {
+  font-size: 0.85rem;
+  padding: 0.35em 0.65em;
+}
+.search-filters {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.action-buttons .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Room - Admin Panel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .admin-header {
+            background-color: #d2691e;
+            /* Orange/brown color similar to your screenshot */
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .admin-sidebar {
+            background-color: #343a40;
+            /* Dark color similar to your screenshot */
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .admin-sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background-color: #d2691e;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include navbar fragment -->
+    <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include sidebar fragment -->
+            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='rooms'" class="col-md-2">
+            </div>
+
+            <!-- Main content area -->
+            <main class="col-md-10">
+                <div class="admin-content">
+                    <div class="container">
+                        <div class="row mb-4">
+                            <div class="col">
+                                <h2>Add New Room</h2>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/rooms}">Manage Rooms</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Add Room</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Alert for Success/Error Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">Room Details</div>
+                                    <div class="card-body">
+                                        <form th:action="@{/admin/addroom}" method="post" th:object="${room}">
+                                            <!-- Room Number -->
+                                            <div class="mb-3">
+                                                <label for="roomNumber" class="form-label">Room Number*</label>
+                                                <input type="text" class="form-control" id="roomNumber"
+                                                    th:field="*{roomNumber}" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('roomNumber')}"
+                                                    th:errors="*{roomNumber}"></div>
+                                                <small class="text-muted">Enter a unique room identifier</small>
+                                            </div>
+
+                                            <!-- Room Type -->
+                                            <div class="mb-3">
+                                                <label for="type" class="form-label">Room Type*</label>
+                                                <select class="form-select" id="type" th:field="*{type}" required>
+                                                    <option value="">Select Room Type</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Double">Double</option>
+                                                    <option value="Triple">Triple</option>
+                                                    <option value="Deluxe">Deluxe</option>
+                                                    <option value="Suite">Suite</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Room Category -->
+                                            <div class="mb-3">
+                                                <label for="category" class="form-label">Room Category*</label>
+                                                <select class="form-select" id="category" th:field="*{category}"
+                                                    required>
+                                                    <option value="">Select Category</option>
+                                                    <option value="AC">AC</option>
+                                                    <option value="Non-AC">Non-AC</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Room Capacity -->
+                                            <div class="mb-3">
+                                                <label for="capacity" class="form-label">Capacity*</label>
+                                                <input type="number" class="form-control" id="capacity"
+                                                    th:field="*{capacity}" min="1" max="10" required>
+                                                <small class="text-muted">Maximum number of guests allowed</small>
+                                            </div>
+
+                                            <!-- Price Per Night -->
+                                            <div class="mb-3">
+                                                <label for="pricePerNight" class="form-label">Price Per Night*</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">₹</span>
+                                                    <input type="number" class="form-control" id="pricePerNight"
+                                                        name="pricePerNight" th:value="${room.pricePerNight}" min="0"
+                                                        step="0.01" required>
+                                                </div>
+                                            </div>
+
+                                            <!-- Availability -->
+                                            <div class="mb-3 form-check">
+                                                <input type="checkbox" class="form-check-input" id="available"
+                                                    th:field="*{available}" checked>
+                                                <label class="form-check-label" for="available">Available for
+                                                    Booking</label>
+                                            </div>
+
+                                            <!-- Submit Button -->
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <a th:href="@{/admin/rooms}"
+                                                    class="btn btn-secondary me-md-2">Cancel</a>
+                                                <button type="submit" class="btn btn-primary">Add Room</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">Room Information</div>
+                                    <div class="card-body">
+                                        <p>Complete all required fields marked with an asterisk (*).</p>
+                                        <h6>Room Types:</h6>
+                                        <ul>
+                                            <li><strong>Single:</strong> A room for one person</li>
+                                            <li><strong>Double:</strong> A room with a double bed or two single beds
+                                            </li>
+                                            <li><strong>Triple:</strong> A room for three people</li>
+                                            <li><strong>Deluxe:</strong> A premium room with enhanced amenities</li>
+                                            <li><strong>Suite:</strong> A larger room with separate living area</li>
+                                        </ul>
+                                        <h6>Categories:</h6>
+                                        <ul>
+                                            <li><strong>AC:</strong> Air-conditioned room</li>
+                                            <li><strong>Non-AC:</strong> Room without air conditioning</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

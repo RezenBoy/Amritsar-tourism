@@ -70,6 +70,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a th:href="@{/admin/rooms}" class="nav-link" th:classappend="${currentPage == 'rooms'} ? 'active'">
+            Manage Rooms
+          </a>
+        </li>
+        <li class="nav-item">
           <a th:href="@{/admin/bookings}" class="nav-link" th:classappend="${currentPage == 'bookings'} ? 'active'">
             Manage Bookings
           </a>
