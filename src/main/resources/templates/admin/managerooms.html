@@ -100,7 +100,7 @@
                                         <input type="text" class="form-control" id="roomNumber" name="roomNumber"
                                             th:value="${param.roomNumber}">
                                     </div>
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <label for="type" class="form-label">Room Type</label>
                                         <select class="form-select" id="type" name="type">
                                             <option value="">All Types</option>
@@ -114,7 +114,7 @@
                                             </option>
                                             <option value="Suite" th:selected="${param.type == 'Suite'}">Suite</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-2">
                                         <label for="category" class="form-label">Category</label>
                                         <select class="form-select" id="category" name="category">
@@ -161,7 +161,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Room No.</th>
-                                                <th>Type</th>
+                                                <!-- <th>Type</th> -->
                                                 <th>Category</th>
                                                 <th>Capacity</th>
                                                 <th>Price/Night</th>
@@ -175,7 +175,7 @@
                                             </tr>
                                             <tr th:each="room : ${rooms}">
                                                 <td th:text="${room.roomNumber}">101</td>
-                                                <td th:text="${room.type}">Double</td>
+                                                <!-- <td th:text="${room.type}">Double</td> -->
                                                 <td th:text="${room.category}">AC</td>
                                                 <td th:text="${room.capacity}">2</td>
                                                 <td>₹<span th:text="${room.pricePerNight}">1500.00</span></td>

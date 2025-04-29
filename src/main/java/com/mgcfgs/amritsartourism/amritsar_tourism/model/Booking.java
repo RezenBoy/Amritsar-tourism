@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
-
 @Entity
 @Table(name = "booking")
 public class Booking {
@@ -36,10 +34,18 @@ public class Booking {
     @Column(name = "status", nullable = false)
     private String status; // e.g. Confirmed, Cancelled, Completed
 
-    // --- Constructors ---
-    public Booking() {}
+    @Column(name = "adults_count", nullable = false)
+    private Integer adultsCount;
 
-    public Booking(RegisterUser user, Room room, LocalDate checkIn, LocalDate checkOut, LocalDateTime bookingDate, String status) {
+    @Column(name = "children_count", nullable = false)
+    private Integer childrenCount;
+
+    // --- Constructors ---
+    public Booking() {
+    }
+
+    public Booking(RegisterUser user, Room room, LocalDate checkIn, LocalDate checkOut, LocalDateTime bookingDate,
+            String status) {
         this.user = user;
         this.room = room;
         this.checkIn = checkIn;
@@ -101,5 +107,20 @@ public class Booking {
     public void setStatus(String status) {
         this.status = status;
     }
-}
 
+    public Integer getAdultsCount() {
+        return adultsCount;
+    }
+
+    public void setAdultsCount(Integer adultsCount) {
+        this.adultsCount = adultsCount;
+    }
+
+    public Integer getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(Integer childrenCount) {
+        this.childrenCount = childrenCount;
+    }
+}

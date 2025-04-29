@@ -16,7 +16,7 @@
 <body>
   <!-- Navbar -->
   <div th:replace="fragments/user_navbar :: navbar"></div>
-<br>
+  <br>
   <!-- Accommodation Listings -->
   <section class="listing-section py-5 bg-light">
     <div class="container">
@@ -30,7 +30,8 @@
               <h5 class="card-title">Saragarhi Sarai</h5>
               <p class="card-text">Affordable stay close to Golden Temple. Clean rooms and peaceful environment.</p>
               <p class="rating">⭐ 4.5 | ₹500/Night</p>
-              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Saragarhi Sarai')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Saragarhi Sarai')" data-bs-toggle="modal"
+                data-bs-target="#receiptModal">Book Now</a>
             </div>
           </div>
         </div>
@@ -38,12 +39,14 @@
         <!-- Card 2 -->
         <div class="col-md-4 col-sm-6">
           <div class="card accommodation-card shadow">
-            <img src="img/guru arjan dev niwas.png" class="card-img-top img-fluid orange-border" alt="Guru Arjan Dev Niwas">
+            <img src="img/guru arjan dev niwas.png" class="card-img-top img-fluid orange-border"
+              alt="Guru Arjan Dev Niwas">
             <div class="card-body">
               <h5 class="card-title">Guru Arjan Dev Niwas</h5>
               <p class="card-text">Comfortable stay with modern amenities. Close to Golden Temple.</p>
               <p class="rating">⭐ 4.8 | ₹500/Night</p>
-              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Guru Arjan Dev Niwas')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Guru Arjan Dev Niwas')"
+                data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
             </div>
           </div>
         </div>
@@ -56,7 +59,8 @@
               <h5 class="card-title">Amritsari Hawali</h5>
               <p class="card-text">Luxury hotel with modern amenities and Golden Temple view rooftop.</p>
               <p class="rating">⭐ 4.8 | ₹1800/Night</p>
-              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Amritsari Hawali')" data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+              <a href="#" class="btn btn-sm btn-warning" onclick="showReceipt('Amritsari Hawali')"
+                data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
             </div>
           </div>
         </div>
@@ -72,40 +76,61 @@
           <h5 class="modal-title" id="receiptModalLabel">Booking Receipt</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
-          <form id="bookingForm">
+          <form th:object="${booking}" th:action="@{/accommodation}" method="post">
+
             <div class="mb-3">
-              <label for="adultsCount" class="form-label">Total visitor's</label>
-              <input type="number" id="adultsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
+              <label for="adultsCount" class="form-label">Total Visitors</label>
+              <select id="adultsCount" name="adultsCount" class="form-control" th:field="*{adultsCount}" required
+                onchange="updateTotal()">
+                <option th:value="1">1</option>
+                <option th:value="2">2</option>
+                <option th:value="3">3</option>
+                <option th:value="4">4</option>
+                <option th:value="5">5</option>
+              </select>
             </div>
-            <!-- <div class="mb-3">
+
+            <div class="mb-3">
               <label for="childrenCount" class="form-label">Children Count</label>
-              <input type="number" id="childrenCount" class="form-control" min="0" value="0" oninput="updateTotal()" />
-            </div> -->
-            <div class="mb-3">
-              <label for="roomsCount" class="form-label">Rooms Count</label>
-              <input type="number" id="roomsCount" class="form-control" min="1" value="1" required oninput="updateTotal()" />
+              <select id="childrenCount" name="childrenCount" class="form-control" th:field="*{childrenCount}"
+                onchange="updateTotal()">
+                <option th:value="0" selected>0</option>
+                <option th:value="1">1</option>
+                <option th:value="2">2</option>
+                <option th:value="3">3</option>
+                <option th:value="4">4</option>
+              </select>
             </div>
+
             <div class="mb-3">
               <label for="checkInDate" class="form-label">Check-in Date</label>
-              <input type="date" id="checkInDate" class="form-control" required oninput="updateTotal()" />
+              <input type="date" class="form-control" th:field="*{checkIn}" required oninput="updateTotal()" />
             </div>
+
+
             <div class="mb-3">
               <label for="checkOutDate" class="form-label">Check-out Date</label>
-              <input type="date" id="checkOutDate" class="form-control" required oninput="updateTotal()" />
+              <input type="date" class="form-control" th:field="*{checkOut}" required oninput="updateTotal()" />
             </div>
+
             <div class="mb-3">
               <h5>Total Amount: ₹<span id="totalAmount">0</span></h5>
             </div>
+
             <div class="d-flex justify-content-between">
-              <button type="button" class="btn btn-success" onclick="generateReceipt()">Confirm</button>
+              <button type="submit" class="btn btn-success">Confirm</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
+
           </form>
         </div>
+
       </div>
     </div>
   </div>
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -118,7 +143,7 @@
       document.getElementById("modalAccommodationName").innerText = accommodationName;
       // Initialize the form with default values
       document.getElementById("adultsCount").value = 1;
-      // document.getElementById("childrenCount").value = 0;
+
       document.getElementById("roomsCount").value = 1;
       document.getElementById("checkInDate").value = '';
       document.getElementById("checkOutDate").value = '';
@@ -128,11 +153,9 @@
     // Function to update total amount based on user input
     function updateTotal() {
       let adults = parseInt(document.getElementById('adultsCount').value);
-      // let children = parseInt(document.getElementById('childrenCount').value);
-      let rooms = parseInt(document.getElementById('roomsCount').value);
       let checkInDate = new Date(document.getElementById('checkInDate').value);
       let checkOutDate = new Date(document.getElementById('checkOutDate').value);
-      
+
       // Calculate the total nights
       let totalNights = (checkOutDate - checkInDate) / (1000 * 3600 * 24);
       if (totalNights <= 0) {
@@ -142,7 +165,7 @@
 
       // Calculate the total cost
       let pricePerNight = 500; // Set the room price here
-      let totalAmount = totalNights * rooms * pricePerNight;
+      let totalAmount = totalNights * pricePerNight;
 
       // Update the total amount
       document.getElementById('totalAmount').innerText = totalAmount;
@@ -156,7 +179,7 @@
       let checkInDate = document.getElementById('checkInDate').value;
       let checkOutDate = document.getElementById('checkOutDate').value;
       let totalAmount = document.getElementById('totalAmount').innerText;
-      
+
       alert(`Receipt:
       Accommodation: ${document.getElementById("modalAccommodationName").innerText}
       // Adults: ${adults}, Children: ${children}, Rooms: ${rooms}

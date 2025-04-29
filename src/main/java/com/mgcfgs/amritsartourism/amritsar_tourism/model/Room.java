@@ -18,8 +18,8 @@ public class Room {
     @Column(name = "room_number", unique = true, nullable = false)
     private String roomNumber;
 
-    @Column(name = "type", nullable = false)
-    private String type; // e.g., Single, Double, Deluxe
+    // @Column(name = "type", nullable = false)
+    // private String type; // e.g., Single, Double, Deluxe
 
     @Column(name = "category", nullable = false)
     private String category; // e.g., AC, Non-AC
@@ -37,10 +37,10 @@ public class Room {
     public Room() {
     }
 
-    public Room(String roomNumber, String type, String category, int capacity, double pricePerNight,
+    public Room(String roomNumber, String category, int capacity, double pricePerNight,
             boolean available) {
         this.roomNumber = roomNumber;
-        this.type = type;
+        // this.type = type;
         this.category = category;
         this.capacity = capacity;
         this.pricePerNight = pricePerNight;
@@ -61,13 +61,13 @@ public class Room {
         this.roomNumber = roomNumber;
     }
 
-    public String getType() {
-        return type;
-    }
+    // public String getType() {
+    //     return type;
+    // }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    // public void setType(String type) {
+    //     this.type = type;
+    // }
 
     public String getCategory() {
         return category;

@@ -10,14 +10,16 @@ import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
     // Custom query to find rooms by type
-    List<Room> findByType(String type);
+    // List<Room> findByType(String type);
 
     // Custom query to find rooms by price range
     List<Room> findByPricePerNightBetween(Double min, Double max);
 
-    // Custom query to find available rooms (assuming you have a field 'isAvailable')
+    // Custom query to find available rooms (assuming you have a field
+    // 'isAvailable')
     List<Room> findByAvailableTrue();
 
     Room findByRoomNumber(String roomNumber);
+
 
 }
