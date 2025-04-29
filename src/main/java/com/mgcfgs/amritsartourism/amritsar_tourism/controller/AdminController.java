@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.mgcfgs.amritsartourism.amritsar_tourism.model.Booking;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
+import com.mgcfgs.amritsartourism.amritsar_tourism.service.BookingService;
 import com.mgcfgs.amritsartourism.amritsar_tourism.service.RoomService;
 import com.mgcfgs.amritsartourism.amritsar_tourism.service.UserServices;
 
@@ -24,6 +26,9 @@ public class AdminController {
 
     @Autowired
     RoomService roomService; // Assuming this service is used for room management
+
+    @Autowired
+    BookingService bookingService; // Assuming this service is used for booking management
 
     @GetMapping("/dashboard") // Will map to /admin/dashboard
     public String showAdminPage() {
@@ -39,7 +44,10 @@ public class AdminController {
     }
 
     @GetMapping("/bookings")
-    public String showHotelsPage() {
+    public String showHotelsPage(Model model) {
+        // Assuming you have a BookingService to fetch bookings
+        List<Booking> bookings = bookingService.getAllBookings();
+        model.addAttribute("bookings", bookings); // Add bookings to the model for display
         return "admin/bookings"; // Would point to templates/admin/hotels.html
     }
 

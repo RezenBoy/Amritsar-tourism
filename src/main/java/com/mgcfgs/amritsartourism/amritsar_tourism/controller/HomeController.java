@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Booking;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
-import com.mgcfgs.amritsartourism.amritsar_tourism.service.RoomService;
+import com.mgcfgs.amritsartourism.amritsar_tourism.service.BookingService;
+// import com.mgcfgs.amritsartourism.amritsar_tourism.service.RoomService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
 
-    private final RoomService roomService;
+    // private final RoomService roomService;
+    private final BookingService bookingService;
 
-    HomeController(RoomService roomService) {
-        this.roomService = roomService;
+    HomeController( BookingService bookingService) {
+        this.bookingService = bookingService;
+        // this.roomService = roomService;
     }
 
     @GetMapping("/")
@@ -34,9 +37,9 @@ public class HomeController {
     @GetMapping("/profile")
     public String profilePage(HttpSession session, Model model) {
         RegisterUser user = (RegisterUser) session.getAttribute("loggedInUser");
-        // if (user == null) {
-        // return "redirect:/login";
-        // }
+        if (user == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("user", user);
         return "user/profile"; // create profile.html page in templates/user
     }
@@ -57,7 +60,7 @@ public class HomeController {
 
     @PostMapping("/accommodation")
     public String accommodationPost(@ModelAttribute Booking booking, HttpSession session) {
-        List<Room> availableRooms = roomService.findAvailableRooms(booking.getCheckIn(), booking.getCheckOut());
+        List<Room> availableRooms = bookingService.findAvailableRooms(booking.getCheckIn(), booking.getCheckOut());
 
         if (availableRooms.isEmpty()) {
             // No rooms available
@@ -78,7 +81,7 @@ public class HomeController {
         booking.setStatus("Confirmed");
 
         // 5. Save Booking
-        roomService.saveBooking(booking);
+        bookingService.saveBooking(booking);
 
         return "redirect:/accommodation?success";
 

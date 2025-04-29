@@ -106,7 +106,7 @@
         </div>
 
         <!-- Recent Bookings Table -->
-        <div class="card mt-4">
+        <!-- <div class="card mt-4">
           <div class="card-header">
             <h3>Recent Bookings</h3>
           </div>
@@ -126,7 +126,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Dynamically populated rows -->
+                  Dynamically populated rows
                   <tr th:each="booking, iterStat : ${recentBookings}" th:if="${iterStat.index < 5}">
                     <td th:text="${booking?.id ?: 'BK-2023' + iterStat.count}">BK-20231</td>
                     <td th:text="${booking?.guestName ?: 'Guest ' + iterStat.count}">Manpreet Singh</td>
@@ -147,7 +147,7 @@
                     </td>
                   </tr>
 
-                  <!-- Sample data if no bookings are provided -->
+                  Sample data if no bookings are provided
                   <tr th:if="${recentBookings == null || recentBookings.empty}">
                     <td>BK-20231</td>
                     <td>Manpreet Singh</td>
@@ -191,7 +191,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </div> -->
       </main>
     </div>
   </div>

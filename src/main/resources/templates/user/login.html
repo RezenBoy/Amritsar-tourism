@@ -7,7 +7,6 @@
     <title>Login Form</title>
     <link rel="stylesheet" th:href="@{/css/form.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 </head>
 
 <body>
@@ -34,14 +33,9 @@
                 </div>
 
                 <div class="input-container">
-                    <!-- Lock icon -->
                     <i class="fa fa-lock icon"></i>
-
-                    <!-- Password input -->
                     <input type="password" th:field="*{password}" placeholder="Enter Password" id="passwordField"
                         class="password-input" oninput="toggleEyeIcon(this)">
-
-                    <!-- Eye icon - hidden by default -->
                     <i class="fa fa-eye icon eye-icon toggle-password" id="togglePassword" style="display: none;"></i>
 
                     <!-- Validation messages -->
@@ -61,7 +55,6 @@
 
                 <p id="bottomText">Don't have an account? <a th:href="@{/register}">Register</a></p>
             </form>
-
         </div>
     </div>
     <script th:src="@{/javascript/user.js}"></script>

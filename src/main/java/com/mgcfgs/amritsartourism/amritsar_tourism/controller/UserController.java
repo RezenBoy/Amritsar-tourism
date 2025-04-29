@@ -95,8 +95,12 @@ public class UserController {
 		session.setAttribute("loggedInUser", dbUser);
 
 		if (dbUser.getRole().equals("ADMIN")) {
+			// model.addAttribute("loginSuccess", true);
+			// model.addAttribute("loginMessage", "Welcome back!"); // optional
 			return "redirect:/admin/dashboard"; // redirect to admin dashboard
 		} else {
+			// model.addAttribute("loginSuccess", true);
+			// model.addAttribute("loginMessage", "Welcome back!"); // optional
 			redirectAttributes.addFlashAttribute("message", "Login successful!");
 			return "redirect:/"; // redirect to home page
 

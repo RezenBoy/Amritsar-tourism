@@ -6,22 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HomePage</title>
   <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <!-- <link rel="stylesheet" th:href="@{/css/form.css}"> -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-  <script>
-    window.addEventListener("scroll", function () {
-      const navbar = document.getElementById("navbar");
-      if (window.scrollY > 50) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
-      }
-    });
-  </script>
+  <script src="javascript/user.js"></script>
+
   <style>
     .navbar .nav-link:hover {
       color: #333;
@@ -39,13 +32,15 @@
   <!-- Navbar -->
   <div th:replace="fragments/user_navbar :: navbar"></div>
 
-
-
   <!-- Wallpaper Section -->
   <div class="position-relative">
     <img src="/img/newpic03.jpg" class="d-block w-100" alt="Golden Temple View"
       style="height: 100vh; object-fit: cover;" />
-
+    <div class="message-container slide-notification" th:if="${successMessage != null or errorMessage != null}">
+      <div class="alert" th:classappend="${successMessage != null} ? 'alert-success' : 'alert-danger'"
+        th:text="${successMessage != null ? successMessage : errorMessage}" th:remove="tag">
+      </div>
+    </div>
     <!-- Gradient Overlay -->
     <div class="position-absolute top-0 start-0 w-100 h-100"
       style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));">
