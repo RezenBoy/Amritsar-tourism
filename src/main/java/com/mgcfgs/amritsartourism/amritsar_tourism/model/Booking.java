@@ -40,6 +40,12 @@ public class Booking {
     @Column(name = "children_count", nullable = false)
     private Integer childrenCount;
 
+    @Column(name = "hotel_name")
+    private String hotelName;
+
+    @Column(name = "hotel_price")
+    private Double hotelPrice;
+
     // --- Constructors ---
     public Booking() {
     }
@@ -84,12 +90,20 @@ public class Booking {
         this.checkIn = checkIn;
     }
 
+    public void setCheckIn(String checkIn) {
+        this.checkIn = LocalDate.parse(checkIn);
+    }
+
     public LocalDate getCheckOut() {
         return checkOut;
     }
 
     public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
+    }
+
+    public void setCheckOut(String checkOut) {
+        this.checkOut = LocalDate.parse(checkOut);
     }
 
     public LocalDateTime getBookingDate() {
@@ -122,5 +136,21 @@ public class Booking {
 
     public void setChildrenCount(Integer childrenCount) {
         this.childrenCount = childrenCount;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public Double getHotelPrice() {
+        return hotelPrice;
+    }
+
+    public void setHotelPrice(Double hotelPrice) {
+        this.hotelPrice = hotelPrice;
     }
 }

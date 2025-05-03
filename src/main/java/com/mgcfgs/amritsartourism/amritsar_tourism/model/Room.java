@@ -3,9 +3,12 @@ package com.mgcfgs.amritsartourism.amritsar_tourism.model;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 @Table(name = "room")
@@ -28,10 +31,14 @@ public class Room {
     private int capacity;
 
     @Column(name = "price_per_night")
-    private double pricePerNight;    
+    private double pricePerNight;
 
     @Column(name = "available")
     private boolean available;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private Hotel hotel;
 
     // --- Constructors ---
     public Room() {
@@ -62,11 +69,11 @@ public class Room {
     }
 
     // public String getType() {
-    //     return type;
+    // return type;
     // }
 
     // public void setType(String type) {
-    //     this.type = type;
+    // this.type = type;
     // }
 
     public String getCategory() {
@@ -99,6 +106,14 @@ public class Room {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
 }

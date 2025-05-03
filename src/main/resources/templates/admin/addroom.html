@@ -90,6 +90,17 @@
                                     <div class="card-header">Room Details</div>
                                     <div class="card-body">
                                         <form th:action="@{/admin/addroom}" method="post" th:object="${room}">
+
+                                            <!-- hotel -->
+                                            <div class="mb-3">
+                                                <label for="type" class="form-label">Select Accommodation</label>
+                                                <select class="form-select" id="hotelSelect" th:field="*{hotel.id}"
+                                                    required>
+                                                    <option value="">Select Hotel</option>
+                                                    <option th:each="hotel : ${hotels}" th:value="${hotel.id}"
+                                                        th:text="${hotel.name}"></option>
+                                                </select>
+                                            </div>
                                             <!-- Room Number -->
                                             <div class="mb-3">
                                                 <label for="roomNumber" class="form-label">Room Number*</label>
@@ -99,19 +110,6 @@
                                                     th:errors="*{roomNumber}"></div>
                                                 <small class="text-muted">Enter a unique room identifier</small>
                                             </div>
-
-                                            <!-- Room Type -->
-                                            <!-- <div class="mb-3">
-                                                <label for="type" class="form-label">Room Type*</label>
-                                                <select class="form-select" id="type" th:field="*{type}" required>
-                                                    <option value="">Select Room Type</option>
-                                                    <option value="Single">Single</option>
-                                                    <option value="Double">Double</option>
-                                                    <option value="Triple">Triple</option>
-                                                    <option value="Deluxe">Deluxe</option>
-                                                    <option value="Suite">Suite</option>
-                                                </select>
-                                            </div> -->
 
                                             <!-- Room Category -->
                                             <div class="mb-3">

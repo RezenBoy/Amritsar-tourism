@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/accomodation.css" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div th:replace="fragments/user_navbar :: navbar"></div>
+    <br>
+    <div class="container mt-5">
+        <h2 class="mb-4">My Bookings</h2>
+
+        <!-- Active Bookings -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                Active Bookings
+            </div>
+            <ul class="list-group list-group-flush" th:if="${activeBookings != null and !activeBookings.isEmpty()}">
+                <li class="list-group-item" th:each="booking : ${activeBookings}">
+                    <strong th:text="${booking.hotelName}">Hotel Name</strong> <br>
+                    Check-in: <span th:text="${booking.checkInDate}"></span><br>
+                    Check-out: <span th:text="${booking.checkOutDate}"></span><br>
+                    Guests: <span th:text="${booking.guests}"></span>
+                </li>
+            </ul>
+            <div class="card-body text-muted" th:if="${activeBookings == null or activeBookings.isEmpty()}">
+                You have no active bookings.
+            </div>
+        </div>
+
+        <!-- Past Bookings -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Past Bookings
+            </div>
+            <ul class="list-group list-group-flush" th:if="${pastBookings != null and !pastBookings.isEmpty()}">
+                <li class="list-group-item" th:each="booking : ${pastBookings}">
+                    <strong th:text="${booking.hotelName}">Hotel Name</strong> <br>
+                    Check-in: <span th:text="${booking.checkInDate}"></span><br>
+                    Check-out: <span th:text="${booking.checkOutDate}"></span><br>
+                    Guests: <span th:text="${booking.guests}"></span>
+                </li>
+            </ul>
+            <div class="card-body text-muted" th:if="${pastBookings == null or pastBookings.isEmpty()}">
+                You have no past bookings.
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

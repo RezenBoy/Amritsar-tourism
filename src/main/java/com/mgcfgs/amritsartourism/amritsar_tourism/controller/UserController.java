@@ -165,4 +165,14 @@ public class UserController {
 		return "redirect:/login";
 	}
 
+	@GetMapping("/bookings")
+	public String bookingsPage(HttpSession session, Model model) {
+		RegisterUser user = (RegisterUser) session.getAttribute("loggedInUser");
+		if (user == null) {
+			return "redirect:/login";
+		}
+		model.addAttribute("user", user);
+		return "user/bookings"; // create bookings.html page in templates/user
+	}
+
 }
