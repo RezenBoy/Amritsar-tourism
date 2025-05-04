@@ -2,29 +2,34 @@
 
 ## Overview
 
-Amritsar Tourism is a web application built with Spring Boot, Thymeleaf, and Bootstrap, designed to facilitate hotel bookings in Amritsar. The application allows users to browse available hotels, view details, and book rooms by selecting check-in/check-out dates and the number of guests. It also includes an admin panel for managing hotels and rooms, such as adding new rooms and associating them with hotels.
+**Amritsar Tourism** is a web application built with Spring Boot, Thymeleaf, and Bootstrap, designed to facilitate hotel bookings in Amritsar. Users can browse hotels, view room details, and book rooms by selecting check-in/check-out dates and the number of guests. Admins can manage hotel rooms via a dedicated panel.
 
 ### Features
+
 - **User Features**:
-  - Browse a list of available hotels with details (name, description, rating, starting price, image).
-  - Book a hotel by selecting check-in/check-out dates, number of adults/children, and viewing the total cost.
+  - Browse available hotels with details (name, description, rating, starting price, image).
+  - Book a hotel by selecting check-in/check-out dates, number of adults/children, and view total cost.
   - Receive confirmation messages after successful bookings.
+
 - **Admin Features**:
-  - Add new rooms and associate them with existing hotels.
+  - Add new rooms and associate them with hotels.
   - View success/error messages for admin actions.
+
 - **Security**:
   - CSRF protection for form submissions.
   - Input validation for both user and admin forms.
 
 ## Technologies Used
+
 - **Backend**: Spring Boot, Spring Data JPA, Hibernate
 - **Frontend**: Thymeleaf, Bootstrap 5.3.3, HTML, CSS, JavaScript
-- **Database**: (Assumed to be MySQL/PostgreSQL; specify your database in `application.properties`)
+- **Database**: MySQL/PostgreSQL (configurable via `application.properties`)
 - **Build Tool**: Maven
 - **Validation**: Jakarta Bean Validation
 - **Logging**: SLF4J (recommended)
 
 ## Prerequisites
+
 - Java 17 or higher
 - Maven 3.6.0 or higher
 - A relational database (e.g., MySQL, PostgreSQL)
@@ -33,108 +38,126 @@ Amritsar Tourism is a web application built with Spring Boot, Thymeleaf, and Boo
 ## Setup Instructions
 
 ### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/<your-username>/amritsar-tourism.git
+git clone https://github.com/RezenBoy/Amritsar-tourism.git
 cd amritsar-tourism
 ```
 
 ### 2. Configure the Database
-- Create a database in your DBMS (e.g., MySQL):
-  ```sql
-  CREATE DATABASE amritsar_tourism;
-  ```
-- Update the `src/main/resources/application.properties` file with your database credentials:
-  ```properties
-  spring.datasource.url=jdbc:mysql://localhost:3306/amritsar_tourism
-  spring.datasource.username=your-username
-  spring.datasource.password=your-password
-  spring.jpa.hibernate.ddl-auto=update
-  spring.jpa.show-sql=true
-  spring.jpa.properties.hibernate.format_sql=true
-  ```
+
+Create a database in your DBMS (e.g., MySQL):
+
+```sql
+CREATE DATABASE amritsar_tourism;
+```
+
+Update `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/amritsar_tourism
+spring.datasource.username=your-username
+spring.datasource.password=your-password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+```
 
 ### 3. Build the Project
+
 ```bash
 mvn clean install
 ```
 
 ### 4. Run the Application
+
 ```bash
 mvn spring-boot:run
 ```
-- The application will start on `http://localhost:8080`.
+
+Access the application at `http://localhost:8080`.
 
 ### 5. Access the Application
-- **User Interface**: Navigate to `http://localhost:8080/accommodation` to browse hotels and book rooms.
-- **Admin Panel**: Navigate to `http://localhost:8080/admin/addroom` to add new rooms (ensure admin routes are secured with authentication in a production environment).
+
+- **User Interface**: `http://localhost:8080/accommodation`
+- **Admin Panel**: `http://localhost:8080/admin/addroom`
+
+> 🔐 *Note: Secure admin routes in production with Spring Security.*
 
 ## Project Structure
-```
+
+```bash
 amritsar-tourism/
 ├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/mgcfgs/amritsartourism/amritsar_tourism/
-│   │   │       ├── controller/       # Controllers (e.g., AccommodationController, AdminController)
-│   │   │       ├── model/            # Entities (e.g., Hotel, Room, Booking)
-│   │   │       ├── repository/       # JPA Repositories (e.g., HotelRepository, BookingRepository)
-│   │   │       ├── service/          # Services (e.g., HotelService, BookingService)
-│   │   │       └── config/           # Configuration classes (e.g., WebConfig for converters)
-│   │   └── resources/
-│   │       ├── templates/            # Thymeleaf templates
-│   │       │   ├── home/             # User templates (e.g., accommodation.html)
-│   │       │   ├── admin/            # Admin templates (e.g., addroom.html)
-│   │       │   └── fragments/        # Reusable fragments (e.g., user_navbar.html, admin_layout.html)
-│   │       ├── static/               # Static assets
-│   │       │   ├── css/              # CSS files (e.g., accomodation.css, admin.css)
-│   │       │   └── img/              # Images (e.g., placeholder.jpg)
-│   │       └── application.properties # Application configuration
-├── pom.xml                            # Maven dependencies
-└── README.md                          # Project documentation
+│   └── main/
+│       ├── java/
+│       │   └── com/mgcfgs/amritsartourism/amritsar_tourism/
+│       │       ├── controller/
+│       │       ├── model/
+│       │       ├── repository/
+│       │       ├── service/
+│       │       └── config/
+│       ├── resources/
+│       │   ├── templates/
+│       │   │   ├── home/
+│       │   │   ├── admin/
+│       │   │   ├── user/
+│       │   │   └── fragments/
+│       │   ├── static/
+│       │   │   ├── css/
+│       │   │   └── img/
+│       │   └── application.properties
+├── pom.xml
+└── README.md
 ```
 
 ## Usage
 
 ### For Users
-1. Visit `http://localhost:8080/accommodation`.
-2. Browse the list of hotels.
-3. Click "Book Now" on a hotel card to open the booking modal.
-4. Fill in the booking details (check-in/check-out dates, number of adults/children).
-5. Confirm the booking and receive a success message.
+
+1. Go to `http://localhost:8080/accommodation`
+2. Browse and select a hotel.
+3. Click “Book Now” and fill out booking details.
+4. Submit and receive confirmation.
 
 ### For Admins
-1. Visit `http://localhost:8080/admin/addroom`.
-2. Fill in the room details (room number, hotel, category, capacity, price per night, availability).
-3. Submit the form to add the room.
-4. Receive a success or error message.
+
+1. Go to `http://localhost:8080/admin/addroom`
+2. Fill in room details and assign to a hotel.
+3. Submit the form and check the success/error message.
 
 ## Database Schema
-The application uses the following tables (auto-generated by Hibernate if `spring.jpa.hibernate.ddl-auto=update`):
-- `hotel`: Stores hotel details (id, name, description, rating, starting_price, image_path).
-- `room`: Stores room details (id, room_number, hotel_id, category, capacity, price_per_night, available).
-- `booking`: Stores booking details (id, hotel_name, hotel_price, adults_count, children_count, check_in, check_out).
+
+Tables generated (via Hibernate):
+
+- `hotel` – Hotel details
+- `room` – Room details
+- `booking` – Booking records with references to users and rooms
 
 ## Future Improvements
-- Add user authentication and authorization (e.g., Spring Security).
-- Implement a room selection feature for bookings.
-- Add a confirmation page after booking with booking details.
-- Enhance admin panel with features to manage hotels and view bookings.
-- Add unit and integration tests.
+
+- Integrate Spring Security for user roles (admin/user)
+- Booking confirmation page with summary
+- Room selection interface
+- Admin dashboard for analytics and booking management
+- Add unit and integration tests
 
 ## Troubleshooting
-- **Form Submission Fails (403 Forbidden)**: Ensure the CSRF token is included in all POST forms.
-- **TransientPropertyValueException**: Ensure related entities (e.g., `Hotel` in `Room`) are fetched from the database before saving.
-- **Database Connection Issues**: Verify your database URL, username, and password in `application.properties`.
+
+- **TransientPropertyValueException**: Make sure related entities (e.g., Hotel in Room) are loaded from the DB before saving.
+- **Connection Issues**: Double-check DB URL, credentials, and running status.
 
 ## Contributing
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Make your changes and commit (`git commit -m "Add your feature"`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Create a pull request.
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Make changes and commit (`git commit -m "Add feature"`)
+4. Push and create a pull request
 
 ## License
-This project is licensed under the MIT License.
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for more details.
 
 ## Contact
-For any inquiries, please contact [your-email@example.com](mailto:your-email@example.com).
+
+For project-related inquiries, contact [smrnjtsngh82@gmail.com](mailto:smrnjtsngh82@gmail.com)
