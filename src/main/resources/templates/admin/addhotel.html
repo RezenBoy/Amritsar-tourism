@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +44,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Include navbar fragment -->
     <div th:replace="fragments/admin_layout :: adminNavbar"></div>
@@ -50,7 +52,8 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Include sidebar fragment -->
-            <div th:replace="fragments/admin_layout :: adminSidebar" th:with="currentPage='hotels'" class="col-md-2"></div>
+            <div th:replace="fragments/admin_layout :: adminSidebar" th:with="currentPage='hotels'" class="col-md-2">
+            </div>
 
             <!-- Main content area -->
             <main class="col-md-10">
@@ -63,7 +66,8 @@
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
-                                        <li class="breadcrumb-item"><a th:href="@{/admin/managehotels}">Manage Hotels</a></li>
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/managehotels}">Manage
+                                                Hotels</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">Add Hotel</li>
                                     </ol>
                                 </nav>
@@ -80,35 +84,54 @@
 
                         <!-- Add Hotel Form -->
                         <div class="card p-4 shadow">
-                            <form th:action="@{/admin/add-hotel}" th:object="${hotel}" method="post" enctype="multipart/form-data">
+                            <form th:action="@{/admin/add-hotel}" th:object="${hotel}" method="post"
+                                enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Hotel Name</label>
-                                    <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="Enter hotel name" required>
-                                    <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                    <input type="text" th:field="*{name}" id="name" class="form-control"
+                                        placeholder="Enter hotel name" required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('name')}"
+                                        th:errors="*{name}"></span>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="location" class="form-label">Location</label>
-                                    <input type="text" th:field="*{location}" id="location" class="form-control" placeholder="Enter location" required>
-                                    <span class="text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
+                                    <input type="text" th:field="*{location}" id="location" class="form-control"
+                                        placeholder="Enter location" required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('location')}"
+                                        th:errors="*{location}"></span>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea th:field="*{description}" id="description" class="form-control" placeholder="Enter description" rows="3"></textarea>
-                                    <span class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                                    <textarea th:field="*{description}" id="description" class="form-control"
+                                        placeholder="Enter description" rows="3"></textarea>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                        th:errors="*{description}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="startingPrice" class="form-label">Minimum Price per Night</label>
+                                    <input type="number" th:field="*{startingPrice}" id="price" class="form-control"
+                                        placeholder="Enter price" min="0" step="100">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('startingPrice')}"
+                                        th:errors="*{price}"></span>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="rating" class="form-label">Rating (0-5)</label>
-                                    <input type="number" th:field="*{rating}" id="rating" class="form-control" placeholder="Enter rating" min="0" max="5" step="0.1">
-                                    <span class="text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></span>
+                                    <input type="number" th:field="*{rating}" id="rating" class="form-control"
+                                        placeholder="Enter rating" min="0" max="5" step="0.1">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('rating')}"
+                                        th:errors="*{rating}"></span>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="imageFile" class="form-label">Hotel Image</label>
-                                    <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*">
-                                    <small class="form-text text-muted">Upload an image of the hotel (JPEG, PNG, etc.)</small>
+                                    <input type="file" id="imageFile" name="imageFile" class="form-control"
+                                        accept="image/*">
+                                    <small class="form-text text-muted">Upload an image of the hotel (JPEG, PNG,
+                                        etc.)</small>
                                 </div>
 
                                 <div class="d-flex justify-content-between">
@@ -128,4 +151,5 @@
     <!-- Custom JS -->
     <script th:src="@{/javascript/user.js}"></script>
 </body>
+
 </html>
