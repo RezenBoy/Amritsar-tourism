@@ -8,7 +8,6 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,18 +34,18 @@ public class AdminController {
 
     private final HotelService hotelService;
 
-    @Autowired
-    UserServices registerUserService; // Assuming this service is used for user management
+    private final UserServices userService; // Assuming this service is used for user management
+    private final RoomService roomService; // Assuming this service is used for room management
+    private final BookingService bookingService; // Assuming this service is used for booking management
 
-    @Autowired
-    RoomService roomService; // Assuming this service is used for room management
-
-    @Autowired
-    BookingService bookingService;
-
-    AdminController(HotelService hotelService) {
+    public AdminController(UserServices userService, RoomService roomService, BookingService bookingService,
+            HotelService hotelService) {
+        this.userService = userService;
+        this.roomService = roomService;
+        this.bookingService = bookingService;
         this.hotelService = hotelService;
-    } // Assuming this service is used for booking management
+    }
+    // Constructor injection for the HotelService
 
     @GetMapping("/dashboard") // Will map to /admin/dashboard
     public String showAdminPage() {
@@ -56,7 +55,7 @@ public class AdminController {
     // Additional admin endpoints can be added here
     @GetMapping("/users")
     public String showUsersPage(Model model) {
-        List<RegisterUser> users = registerUserService.getAllUsers();
+        List<RegisterUser> users = userService.getAllUsers();
         model.addAttribute("users", users); // Add users to the model for display
         return "admin/users"; // Would point to templates/admin/users.html
     }
@@ -83,9 +82,9 @@ public class AdminController {
     public String addRoom(@Valid @ModelAttribute("room") Room room, BindingResult bindingResult,
             RedirectAttributes redirectAttributes, Model model) {
         // if (bindingResult.hasErrors()) {
-        //     List<Hotel> hotels = hotelService.getAllHotels();
-        //     model.addAttribute("hotels", hotels);
-        //     return "admin/addroom";
+        // List<Hotel> hotels = hotelService.getAllHotels();
+        // model.addAttribute("hotels", hotels);
+        // return "admin/addroom";
         // }
 
         try {
@@ -178,6 +177,39 @@ public class AdminController {
         // List<Room> rooms = roomService.getAllRooms();
         // model.addAttribute("rooms", rooms); // Add hotels to the model for display
         return "admin/managehotel"; // Would point to templates/admin/managehotel.html
+    }
+
+    @PostMapping("/delete-hotel")
+    public String deleteHotel(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            hotelService.deleteHotel(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Hotel deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete hotel: " + e.getMessage());
+        }
+        return "redirect:/admin/manage-hotel";
+    }
+
+    @PostMapping("/delete-room")
+    public String deleteRoom(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            roomService.deleteRoom(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Room deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete room: " + e.getMessage());
+        }
+        return "redirect:/admin/rooms";
+    }
+
+    @GetMapping("/delete-user")
+    public String deleteUser(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
+        }
+        return "redirect:/admin/users";
     }
 
 }

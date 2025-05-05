@@ -72,4 +72,17 @@ public class UserServices {
         return userRepository.findAll();
     }
 
+    public void deleteUser(RegisterUser user) {
+        // This method deletes a user from the database.
+        userRepository.delete(user);
+    }
+    public RegisterUser getUserByEmail(String email) {
+        // This method retrieves a user by their email address.
+        return userRepository.findByEmail(email);
+    }
+
+    public List<RegisterUser> findAll() {
+        return userRepository.findAll();
+    }
+
 }

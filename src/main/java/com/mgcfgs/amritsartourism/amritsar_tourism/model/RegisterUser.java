@@ -1,15 +1,9 @@
 package com.mgcfgs.amritsartourism.amritsar_tourism.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "user")
@@ -30,9 +24,10 @@ public class RegisterUser {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    @Transient // Do not persist confirm_password in DB
-    // @NotEmpty(message = "Please confirm your password")
+    @Transient
     private String confirm_password;
+
+    private String phone; // Added phone field
 
     private String role = "USER"; // Default role
 
@@ -86,6 +81,14 @@ public class RegisterUser {
         this.confirm_password = confirm_password;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getRole() {
         return role;
     }
@@ -96,13 +99,10 @@ public class RegisterUser {
 
     @Override
     public String toString() {
-
         return "RegisterUser [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password
-                + ", confirm_password=" + confirm_password + ", role=" + role + "]";
+                + ", confirm_password=" + confirm_password + ", phone=" + phone + ", role=" + role + "]";
     }
-
 }
-
 // Query to Add Admin User to Database:
 
 // INSERT INTO user (name, email, password, role)

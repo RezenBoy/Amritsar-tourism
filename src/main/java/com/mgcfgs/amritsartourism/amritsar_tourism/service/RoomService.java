@@ -18,7 +18,15 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public void deleteRoom(Long id) {
+        roomRepository.deleteById(id);
+    }
+
     public List<Room> getAllRooms() {
+        return roomRepository.findAll();
+    }
+
+    public List<Room> findAll() {
         return roomRepository.findAll();
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,14 +44,16 @@
         }
     </style>
 </head>
+
 <body>
-        <!-- Include navbar fragment -->
-        <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
+    <!-- Include navbar fragment -->
+    <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
 
     <div class="container-fluid">
         <div class="row">
             <!-- Include sidebar fragment -->
-            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='hotels'" class="col-md-2"></div>
+            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='hotels'" class="col-md-2">
+            </div>
 
             <!-- Main content area -->
             <main class="col-md-10">
@@ -121,7 +124,7 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Hotel List</span>
                                 <span class="badge bg-primary"
-                                      th:text="${hotels != null ? hotels.size() : 0} + ' Hotel(s)'"></span>
+                                    th:text="${hotels != null ? hotels.size() : 0} + ' Hotel(s)'"></span>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -149,14 +152,14 @@
                                                 <td>
                                                     <div class="action-buttons d-flex justify-content-center gap-2">
                                                         <a th:href="@{/admin/hotels/{id}/edit(id=${hotel.id})}"
-                                                           class="btn btn-sm btn-warning text-white" title="Edit">
+                                                            class="btn btn-sm btn-warning text-white" title="Edit">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
                                                         <button type="button"
-                                                                class="btn btn-sm btn-danger delete-hotel-btn"
-                                                                th:data-hotel-id="${hotel.id}"
-                                                                th:data-hotel-name="${hotel.name}" title="Delete"
-                                                                data-bs-toggle="modal" data-bs-target="#deleteHotelModal">
+                                                            class="btn btn-sm btn-danger delete-hotel-btn"
+                                                            th:data-hotel-id="${hotel.id}"
+                                                            th:data-hotel-name="${hotel.name}" title="Delete"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteHotelModal">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </div>
@@ -171,21 +174,22 @@
                                     <ul class="pagination justify-content-center">
                                         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                                             <a class="page-link"
-                                               th:href="@{/admin/managehotels(page=${currentPage - 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
-                                               aria-label="Previous">
+                                                th:href="@{/admin/managehotels(page=${currentPage - 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                                                aria-label="Previous">
                                                 <span aria-hidden="true">«</span>
                                             </a>
                                         </li>
                                         <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
                                             th:classappend="${pageNumber == currentPage} ? 'active'">
                                             <a class="page-link"
-                                               th:href="@{/admin/managehotels(page=${pageNumber}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
-                                               th:text="${pageNumber}"></a>
+                                                th:href="@{/admin/managehotels(page=${pageNumber}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                                                th:text="${pageNumber}"></a>
                                         </li>
-                                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                        <li class="page-item"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
                                             <a class="page-link"
-                                               th:href="@{/admin/managehotels(page=${currentPage + 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
-                                               aria-label="Next">
+                                                th:href="@{/admin/managehotels(page=${currentPage + 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                                                aria-label="Next">
                                                 <span aria-hidden="true">»</span>
                                             </a>
                                         </li>
@@ -200,12 +204,14 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteHotelModal" tabindex="-1" aria-labelledby="deleteHotelModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteHotelModal" tabindex="-1" aria-labelledby="deleteHotelModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteHotelModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete Hotel <span id="deleteHotelName" class="fw-bold"></span>?</p>
@@ -213,10 +219,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form id="deleteHotelForm" th:action="@{/admin/hotels/delete}" method="post">
-                        <input type="hidden" id="hotelIdToDelete" name="roomId">
+                    <form id="deleteHotelForm" th:action="@{/admin/delete-hotel}" method="post">
+                        <!-- Fix parameter name to match controller -->
+                        <input type="hidden" id="hotelIdToDelete" name="id" th:value="${hotelId}">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -227,6 +235,16 @@
     <!-- Custom JS -->
     <script th:src="@{/javascript/user.js}"></script>
     <script>
+
+        document.querySelectorAll(".delete-hotel-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const hotelId = button.getAttribute("data-hotel-id");
+                document.getElementById("hotelIdToDelete").value = hotelId;
+            });
+        });
+
+
+
         document.addEventListener('DOMContentLoaded', function () {
             // Set up delete modal
             const deleteButtons = document.querySelectorAll('.delete-hotel-btn');
@@ -242,4 +260,5 @@
         });
     </script>
 </body>
+
 </html>
