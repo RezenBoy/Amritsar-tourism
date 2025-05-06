@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,9 +29,14 @@ import com.mgcfgs.amritsartourism.amritsar_tourism.service.HotelService;
 import com.mgcfgs.amritsartourism.amritsar_tourism.service.RoomService;
 import com.mgcfgs.amritsartourism.amritsar_tourism.service.UserServices;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @RequestMapping("/admin") // Base path for all methods in this controller
 public class AdminController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private final HotelService hotelService;
 
@@ -201,6 +207,55 @@ public class AdminController {
         return "redirect:/admin/rooms";
     }
 
+    // @GetMapping("/delete-booking")
+    // public String deleteBooking(@RequestParam("id") Long id, RedirectAttributes
+    // redirectAttributes) {
+    // try {
+    // bookingService.deleteBooking(id);
+    // redirectAttributes.addFlashAttribute("successMessage", "Booking deleted
+    // successfully!");
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete
+    // booking: " + e.getMessage());
+    // }
+    // return "redirect:/admin/bookings";
+    // }
+
+    // @GetMapping("/bookings")
+    // public String showBookingsPage(
+    //         @RequestParam(value = "page", defaultValue = "1") int page,
+    //         @RequestParam(value = "size", defaultValue = "10") int size,
+    //         @RequestParam(value = "status", required = false) String status,
+    //         Model model) {
+    //     logger.info("Accessing bookings page: page={}, size={}, status={}", page, size, status);
+    //     Pageable pageable = PageRequest.of(page - 1, size);
+    //     Page<Booking> bookingPage = bookingService.getBookings(pageable, status);
+    //     model.addAttribute("bookings", bookingPage.getContent());
+    //     model.addAttribute("currentPage", page);
+    //     model.addAttribute("totalPages", bookingPage.getTotalPages());
+    //     model.addAttribute("size", size);
+    //     model.addAttribute("currentStatus", status != null ? status : "ALL");
+    //     List<RegisterUser> users = userService.findAll();
+    //     List<Room> rooms = roomService.findAll();
+    //     model.addAttribute("users", users);
+    //     model.addAttribute("rooms", rooms);
+    //     model.addAttribute("booking", new Booking()); // Ensure a new Booking object is always added
+    //     return "admin/managebookings";
+    // }
+
+    @PostMapping("/bookings/delete/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        logger.info("Deleting booking ID {}", id);
+        try {
+            bookingService.deleteBooking(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Booking deleted successfully!");
+        } catch (Exception e) {
+            logger.error("Failed to delete booking with ID {}: {}", id, e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete booking: " + e.getMessage());
+        }
+        return "redirect:/admin/bookings";
+    }
+
     @GetMapping("/delete-user")
     public String deleteUser(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -211,5 +266,121 @@ public class AdminController {
         }
         return "redirect:/admin/users";
     }
+
+    // @GetMapping("/edit-user")
+    // public String showEditUserForm(@RequestParam("id") Long id, Model model) {
+    // RegisterUser user = userService.getUserById(id);
+    // if (user != null) {
+    // model.addAttribute("user", user); // Add the user to the model for editing
+    // return "admin/edit-user"; // Points to templates/admin/edit-user.html
+    // } else {
+    // return "redirect:/admin/users"; // Redirect if user not found
+    // }
+    // }
+
+    // @PostMapping("/edit-user")
+    // public String editUser(@Valid @ModelAttribute("user") RegisterUser user,
+    // BindingResult bindingResult,
+    // RedirectAttributes redirectAttributes) {
+    // if (bindingResult.hasErrors()) {
+    // return "admin/edit-user"; // Return to the edit form if there are validation
+    // errors
+    // }
+    // try {
+    // userService.updateUser(user); // Assuming you have a method to update the
+    // user
+    // redirectAttributes.addFlashAttribute("successMessage", "User updated
+    // successfully!");
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("errorMessage", "Failed to update user:
+    // " + e.getMessage());
+    // }
+    // return "redirect:/admin/users"; // Redirect to the users page after editing
+    // }
+
+    // @GetMapping("/add-user")
+    // public String showAddUserForm(Model model) {
+    // model.addAttribute("user", new RegisterUser()); // Assuming you have a
+    // RegisterUser class
+    // return "admin/add-user"; // Points to templates/admin/add-user.html
+    // }
+
+    // @PostMapping("/add-user")
+    // public String addUser(@Valid @ModelAttribute("user") RegisterUser user,
+    // BindingResult bindingResult,
+    // RedirectAttributes redirectAttributes) {
+    // if (bindingResult.hasErrors()) {
+    // return "admin/add-user"; // Return to the add form if there are validation
+    // errors
+    // }
+    // try {
+    // userService.addUser(user); // Assuming you have a method to add the user
+    // redirectAttributes.addFlashAttribute("successMessage", "User added
+    // successfully!");
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("errorMessage", "Failed to add user: " +
+    // e.getMessage());
+    // }
+    // return "redirect:/admin/users"; // Redirect to the users page after adding
+    // }
+
+    // @GetMapping("/user-details")
+    // public String showUserDetails(@RequestParam("id") Long id, Model model) {
+    // RegisterUser user = userService.getUserById(id);
+    // if (user != null) {
+    // model.addAttribute("user", user); // Add the user to the model for display
+    // return "admin/user-details"; // Points to templates/admin/user-details.html
+    // } else {
+    // return "redirect:/admin/users"; // Redirect if user not found
+    // }
+    // }
+
+    // @GetMapping("/user-bookings")
+    // public String showUserBookings(@RequestParam("id") Long id, Model model) {
+    // RegisterUser user = userService.getUserById(id);
+    // if (user != null) {
+    // List<Booking> bookings = bookingService.findBookingsByUserId(id); // Fetch
+    // bookings for the user
+    // model.addAttribute("user", user); // Add the user to the model for display
+    // model.addAttribute("bookings", bookings); // Add bookings to the model for
+    // display
+    // return "admin/user-bookings"; // Points to templates/admin/user-bookings.html
+    // } else {
+    // return "redirect:/admin/users"; // Redirect if user not found
+    // }
+    // }
+
+    // @GetMapping("/edit-room")
+    // public String showEditRoomForm(@RequestParam("id") Long id, Model model) {
+    // Room room = roomService.getRoomById(id);
+    // if (room != null) {
+    // List<Hotel> hotels = hotelService.getAllHotels(); // Fetch all hotels
+    // model.addAttribute("room", room); // Add the room to the model for editing
+    // model.addAttribute("hotels", hotels); // Add hotels to the model for display
+    // return "admin/edit-room"; // Points to templates/admin/edit-room.html
+    // } else {
+    // return "redirect:/admin/rooms"; // Redirect if room not found
+    // }
+    // }
+
+    // @PostMapping("/edit-room")
+    // public String editRoom(@Valid @ModelAttribute("room") Room room,
+    // BindingResult bindingResult,
+    // RedirectAttributes redirectAttributes) {
+    // if (bindingResult.hasErrors()) {
+    // return "admin/edit-room"; // Return to the edit form if there are validation
+    // errors
+    // }
+    // try {
+    // roomService.updateRoom(room); // Assuming you have a method to update the
+    // room
+    // redirectAttributes.addFlashAttribute("successMessage", "Room updated
+    // successfully!");
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("errorMessage", "Failed to update room:
+    // " + e.getMessage());
+    // }
+    // return "redirect:/admin/rooms"; // Redirect to the rooms page after editing
+    // }
 
 }

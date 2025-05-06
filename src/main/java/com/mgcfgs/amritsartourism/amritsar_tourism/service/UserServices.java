@@ -85,4 +85,14 @@ public class UserServices {
         return userRepository.findAll();
     }
 
+    public void updateUser(RegisterUser user) {
+        // This method updates a user's information in the database.
+        RegisterUser existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + user.getId()));
+        existingUser.setName(user.getName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPassword(user.getPassword());
+        userRepository.save(existingUser);
+    }
+
 }

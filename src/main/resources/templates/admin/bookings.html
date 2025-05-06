@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Bookings - Amritsar Tourism</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/admin.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <style>
         .admin-header {
             background-color: #d2691e;
-            /* Orange/brown color similar to your screenshot */
             color: white;
             padding: 15px;
-            font-weight: bold;  
+            font-weight: bold;
         }
 
         .admin-sidebar {
             background-color: #343a40;
-            /* Dark color similar to your screenshot */
             color: white;
             min-height: 100vh;
             padding: 0;
@@ -43,7 +40,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Include navbar fragment -->
     <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
@@ -51,32 +47,45 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Include sidebar fragment -->
-            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='bookings'"></div>
+            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='bookings'" class="col-md-2"></div>
 
             <!-- Main content area -->
             <main class="col-md-10 admin-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Manage Bookings</h2>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookingModal">
+                    <button class="btn btn-primary create-booking-btn" data-bs-toggle="modal" data-bs-target="#addBookingModal">
                         <i class="bi bi-plus-circle"></i> Create New Booking
                     </button>
                 </div>
 
-                <!-- Search and Filter Bar -->
-                <!-- <div class="row search-bar">
-                    <div class="col-md-6">
+                <!-- Alert for Success/Error Messages -->
+                <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${successMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${errorMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
 
+                <!-- Search and Filter Bar -->
+                <div class="row search-bar mb-4">
+                    <div class="col-md-6">
+                        <form th:action="@{/admin/bookings}" method="get" class="d-flex">
+                            <input type="text" name="search" class="form-control me-2" placeholder="Search by user or room..." th:value="${param.search}" />
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
                     </div>
                     <div class="col-md-6 text-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-outline-secondary">All Bookings</button>
-                            <button type="button" class="btn btn-outline-secondary">Confirmed</button>
-                            <button type="button" class="btn btn-outline-secondary">Pending</button>
-                            <button type="button" class="btn btn-outline-secondary">Cancelled</button>
-                            <button type="button" class="btn btn-outline-secondary">Completed</button>
+                            <a th:href="@{/admin/bookings(status='ALL')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'ALL'} ? 'active'">All Bookings</a>
+                            <a th:href="@{/admin/bookings(status='Confirmed')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Confirmed'} ? 'active'">Confirmed</a>
+                            <a th:href="@{/admin/bookings(status='Pending')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Pending'} ? 'active'">Pending</a>
+                            <a th:href="@{/admin/bookings(status='Cancelled')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Cancelled'} ? 'active'">Cancelled</a>
+                            <a th:href="@{/admin/bookings(status='Completed')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Completed'} ? 'active'">Completed</a>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- Bookings Table -->
                 <div class="card">
@@ -97,6 +106,7 @@
                                         <th>Status</th>
                                         <th>Adults</th>
                                         <th>Children</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,65 +114,94 @@
                                     <tr th:each="booking : ${bookings}">
                                         <td th:text="${booking.id}"></td>
                                         <td th:text="${booking.user.name}"></td>
-                                        <!-- Assuming RegisterUser has a username field -->
-                                        <td th:text="${booking.room.id}"></td> <!-- Assuming Room has a name field -->
+                                        <td th:text="${booking.room.id}"></td>
                                         <td th:text="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"></td>
                                         <td th:text="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"></td>
-                                        <td th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}">
-                                        </td>
+                                        <td th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                         <td th:text="${booking.status}"></td>
                                         <td th:text="${booking.adultsCount}"></td>
                                         <td th:text="${booking.childrenCount}"></td>
                                         <td>
                                             <div class="btn-group">
-                                              <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                data-bs-target="#viewUserModal">
-                                                <i class="bi bi-eye"></i>
-                                              </button>
-                                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#editUserModal">
-                                                <i class="bi bi-pencil"></i>
-                                              </button>
-                                              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#deleteUserModal">
-                                                <i class="bi bi-trash"></i>
-                                              </button>
+                                                <button type="button" class="btn btn-sm btn-info view-booking-btn"
+                                                        th:data-booking-id="${booking.id}"
+                                                        th:data-user-name="${booking.user.name}"
+                                                        th:data-user-email="${booking.user.email}"
+                                                        th:data-user-phone="${booking.user.phone}"
+                                                        th:data-room-number="${booking.room.id}"
+                                                        th:data-hotel-price="${booking.hotelPrice}"
+                                                        th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
+                                                        th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
+                                                        th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                                        th:data-status="${booking.status}"
+                                                        data-bs-toggle="modal" data-bs-target="#viewBookingModal">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-primary edit-booking-btn"
+                                                        th:data-booking-id="${booking.id}"
+                                                        th:data-user-id="${booking.user.id}"
+                                                        th:data-user-name="${booking.user.name}"
+                                                        th:data-user-email="${booking.user.email}"
+                                                        th:data-user-phone="${booking.user.phone}"
+                                                        th:data-room-id="${booking.room.id}"
+                                                        th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
+                                                        th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
+                                                        th:data-status="${booking.status}"
+                                                        th:data-adults-count="${booking.adultsCount}"
+                                                        th:data-children-count="${booking.childrenCount}"
+                                                        data-bs-toggle="modal" data-bs-target="#editBookingModal">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger delete-booking-btn"
+                                                        th:data-booking-id="${booking.id}"
+                                                        th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteBookingModal">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                             </div>
-                                          </td>
+                                        </td>
                                     </tr>
-
                                     <!-- Show message if list is empty -->
                                     <tr th:if="${#lists.isEmpty(bookings)}">
-                                        <td colspan="9" class="text-center">No bookings found.</td>
+                                        <td colspan="10" class="text-center">No bookings found.</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Pagination (optional) -->
-                        <nav aria-label="Page navigation" class="mt-4">
+                        <!-- Pagination -->
+                        <nav th:if="${totalPages > 1}" aria-label="Page navigation" class="mt-4">
                             <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/admin/bookings(page=${currentPage - 1}, size=${size}, status=${currentStatus})}"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
                                 </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
+                                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                                    th:classappend="${pageNumber == currentPage} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/admin/bookings(page=${pageNumber}, size=${size}, status=${currentStatus})}"
+                                       th:text="${pageNumber}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/admin/bookings(page=${currentPage + 1}, size=${size}, status=${currentStatus})}"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
                 </div>
-
             </main>
         </div>
     </div>
 
     <!-- View Booking Modal -->
-    <div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -174,89 +213,42 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <h4>Booking Information</h4>
-                                <p><strong>Booking ID:</strong> BKG-10001</p>
-                                <p><strong>Status:</strong> <span
-                                        class="booking-status status-confirmed">Confirmed</span></p>
-                                <p><strong>Created On:</strong> 2025-04-01 15:30:45</p>
-                                <p><strong>Last Updated:</strong> 2025-04-02 10:15:22</p>
-                            </div>
-
-                            <div class="mb-3">
-                                <h4>Tour Details</h4>
-                                <p><strong>Tour:</strong> Golden Temple Tour</p>
-                                <p><strong>Tour Type:</strong> <span class="tour-type">Group</span></p>
-                                <p><strong>Tour Date:</strong> 2025-04-15</p>
-                                <p><strong>Tour Time:</strong> 09:00 AM</p>
-                                <p><strong>Duration:</strong> 4 hours</p>
-                                <p><strong>Meeting Point:</strong> Amritsar Tourism Office, Mall Road</p>
+                                <p><strong>Booking ID:</strong> <span id="viewBookingId"></span></p>
+                                <p><strong>Status:</strong> <span id="viewBookingStatus" class="badge"></span></p>
+                                <p><strong>Created On:</strong> <span id="viewBookingDate"></span></p>
                             </div>
                         </div>
-
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h4>Room Details</h4>
+                                <p><strong>Room Number:</strong> <span id="viewRoomNumber"></span></p>
+                                <p><strong>Total Price:</strong> ₹<span id="viewHotelPrice"></span></p>
+                                <p><strong>Check-in:</strong> <span id="viewCheckIn"></span></p>
+                                <p><strong>Check-out:</strong> <span id="viewCheckOut"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <h4>Customer Information</h4>
-                                <p><strong>Name:</strong>Username</p>
-                                <p><strong>Email:</strong> user@example.com</p>
-                                <p><strong>Phone:</strong> +91 9876543210</p>
-                                <p><strong>Group Size:</strong> 2 people</p>
-                            </div>
-
-                            <div class="mb-3">
-                                <h4>Payment Information</h4>
-                                <p><strong>Total Amount:</strong> ₹3000</p>
-                                <p><strong>Payment Status:</strong>
-                                    <span class="payment-status payment-paid"></span>
-                                    Paid
-                                </p>
-                                <p><strong>Payment Method:</strong> Credit Card</p>
-                                <p><strong>Transaction ID:</strong> TXN123456789</p>
-                                <p><strong>Payment Date:</strong> 2025-04-01 15:35:12</p>
+                                <p><strong>Name:</strong> <span id="viewUserName"></span></p>
+                                <p><strong>Email:</strong> <span id="viewUserEmail"></span></p>
+                                <p><strong>Phone:</strong> <span id="viewUserPhone"></span></p>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <h4>Special Requests</h4>
-                        <p>Vegetarian lunch options requested. Need assistance for elderly person with limited mobility.
-                        </p>
-                    </div>
-
-                    <div class="mb-3">
-                        <h4>Notes & Admin Comments</h4>
-                        <p>Customer called to confirm booking details on April 2nd. Assigned guide: Jaskaran.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#editBookingModal" data-bs-dismiss="modal">Edit</button>
-                    <div class="dropdown d-inline-block">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                            id="bookingActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="bookingActionsDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print Booking</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> Email Confirmation</a>
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-receipt"></i> Generate Invoice</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal"
-                                    data-bs-target="#cancelBookingModal" data-bs-dismiss="modal"><i
-                                        class="bi bi-x-circle"></i> Cancel Booking</a></li>
-                        </ul>
-                    </div>
+                    <button type="button" class="btn btn-primary edit-from-view-btn" data-bs-toggle="modal" data-bs-target="#editBookingModal" data-bs-dismiss="modal">Edit</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Add Booking Modal -->
-    <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -264,129 +256,80 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/admin/bookings/add}" method="post">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 class="mb-3">Customer Information</h5>
-                                <div class="mb-3">
-                                    <label for="customerSelect" class="form-label">Select Existing Customer</label>
-                                    <select class="form-select mb-2" id="customerSelect">
-                                        <option value="">-- Select Customer --</option>
-                                        <option value="1">Gurpreet Singh (gurpreet@example.com)</option>
-                                        <option value="2">Manpreet Kaur (manpreet@example.com)</option>
-                                        <option value="3">Harjot Singh (harjot@example.com)</option>
-                                    </select>
-                                    <div class="form-text">Or enter new customer details below</div>
+                    <div th:if="${booking != null}">
+                        <form id="addBookingForm" th:action="@{/admin/bookings/add}" method="post" th:object="${booking}">
+                            <!-- CSRF Token -->
+                            <th:block th:if="${_csrf != null}">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            </th:block>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Customer Information</h5>
+                                    <div class="mb-3">
+                                        <label for="addUserId" class="form-label">Select Customer</label>
+                                        <select class="form-select" id="addUserId" th:field="*{user.id}" required>
+                                            <option value="">-- Select Customer --</option>
+                                            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="customerName" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="customerName" name="customerName">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="customerEmail" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="customerEmail" name="customerEmail">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="customerPhone" class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" id="customerPhone" name="customerPhone">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <h5 class="mb-3">Tour Information</h5>
-                                <div class="mb-3">
-                                    <label for="tourSelect" class="form-label">Select Tour</label>
-                                    <select class="form-select" id="tourSelect" name="tourId" required>
-                                        <option value="">-- Select Tour --</option>
-                                        <option value="1">Golden Temple Tour</option>
-                                        <option value="2">Wagah Border Ceremony</option>
-                                        <option value="3">Amritsar Food Tour</option>
-                                        <option value="4">Golden Temple & Jallianwala Bagh</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tourType" class="form-label">Tour Type</label>
-                                    <select class="form-select" id="tourType" name="tourType" required>
-                                        <option value="GROUP">Group Tour</option>
-                                        <option value="PRIVATE">Private Tour</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tourDate" class="form-label">Tour Date</label>
-                                    <input type="date" class="form-control" id="tourDate" name="tourDate" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tourTime" class="form-label">Tour Time</label>
-                                    <input type="time" class="form-control" id="tourTime" name="tourTime" required>
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Room Information</h5>
+                                    <div class="mb-3">
+                                        <label for="addRoomId" class="form-label">Select Room</label>
+                                        <select class="form-select" id="addRoomId" th:field="*{room.id}" required>
+                                            <option value="">-- Select Room --</option>
+                                            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'"></option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addCheckIn" class="form-label">Check-in Date</label>
+                                        <input type="date" class="form-control" id="addCheckIn" th:field="*{checkIn}" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addCheckOut" class="form-label">Check-out Date</label>
+                                        <input type="date" class="form-control" id="addCheckOut" th:field="*{checkOut}" required />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 class="mb-3">Booking Details</h5>
-                                <div class="mb-3">
-                                    <label for="groupSize" class="form-label">Number of People</label>
-                                    <input type="number" class="form-control" id="groupSize" name="groupSize" min="1"
-                                        value="1" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="specialRequests" class="form-label">Special Requests</label>
-                                    <textarea class="form-control" id="specialRequests" name="specialRequests"
-                                        rows="3"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <h5 class="mb-3">Payment Information</h5>
-                                <div class="mb-3">
-                                    <label for="totalAmount" class="form-label">Total Amount (₹)</label>
-                                    <input type="number" class="form-control" id="totalAmount" name="totalAmount"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="paymentStatus" class="form-label">Payment Status</label>
-                                    <select class="form-select" id="paymentStatus" name="paymentStatus" required>
-                                        <option value="PENDING">Pending</option>
-                                        <option value="PAID">Paid</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="paymentMethod" class="form-label">Payment Method</label>
-                                    <select class="form-select" id="paymentMethod" name="paymentMethod">
-                                        <option value="">-- Select Payment Method --</option>
-                                        <option value="CREDIT_CARD">Credit Card</option>
-                                        <option value="DEBIT_CARD">Debit Card</option>
-                                        <option value="UPI">UPI</option>
-                                        <option value="NET_BANKING">Net Banking</option>
-                                        <option value="CASH">Cash</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="transactionId" class="form-label">Transaction ID</label>
-                                    <input type="text" class="form-control" id="transactionId" name="transactionId">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Booking Details</h5>
+                                    <div class="mb-3">
+                                        <label for="addAdultsCount" class="form-label">Adults</label>
+                                        <input type="number" class="form-control" id="addAdultsCount" th:field="*{adultsCount}" min="1" value="1" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addChildrenCount" class="form-label">Children</label>
+                                        <input type="number" class="form-control" id="addChildrenCount" th:field="*{childrenCount}" min="0" value="0" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addStatus" class="form-label">Status</label>
+                                        <select class="form-select" id="addStatus" th:field="*{status}" required>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Confirmed">Confirmed</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="adminNotes" class="form-label">Admin Notes</label>
-                            <textarea class="form-control" id="adminNotes" name="adminNotes" rows="2"></textarea>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Create Booking</button>
-                        </div>
-                    </form>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Create Booking</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div th:if="${booking == null}" class="alert alert-warning">
+                        Unable to create a new booking at this time. Please try again later.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Edit Booking Modal -->
-    <div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -394,66 +337,226 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/admin/bookings/edit}" method="post">
-                        <input type="hidden" name="id" value="BKG-10001">
-
+                    <form id="editBookingForm" th:action="@{/admin/bookings/edit/__${bookingId}__}" method="post">
+                        <!-- CSRF Token -->
+                        <th:block th:if="${_csrf != null}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        </th:block>
+                        <input type="hidden" name="id" id="editBookingId" />
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 class="mb-3">Customer Information</h5>
                                 <div class="mb-3">
-                                    <label for="editCustomerName" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="editCustomerName" name="customerName"
-                                        value="Gurpreet Singh">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editCustomerEmail" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="editCustomerEmail" name="customerEmail"
-                                        value="gurpreet@example.com">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editCustomerPhone" class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" id="editCustomerPhone" name="customerPhone"
-                                        value="+91 9876543210">
+                                    <label for="editUserId" class="form-label">Select Customer</label>
+                                    <select class="form-select" id="editUserId" name="user.id" required>
+                                        <option value="">-- Select Customer --</option>
+                                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
+                                    </select>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
-                                <h5 class="mb-3">Tour Information</h5>
+                                <h5 class="mb-3">Room Information</h5>
                                 <div class="mb-3">
-                                    <label for="editTourSelect" class="form-label">Select Tour</label>
-                                    <select class="form-select" id="editTourSelect" name="tourId" required>
-                                        <option value="1" selected>Golden Temple Tour</option>
-                                        <option value="2">Wagah Border Ceremony</option>
-                                        <option value="3">Amritsar Food Tour</option>
-                                        <option value="4">Golden Temple & Jallianwala Bagh</option>
+                                    <label for="editRoomId" class="form-label">Select Room</label>
+                                    <select class="form-select" id="editRoomId" name="room.id" required>
+                                        <option value="">-- Select Room --</option>
+                                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'"></option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="editTourType" class="form-label">Tour Type</label>
-                                    <select class="form-select" id="editTourType" name="tourType" required>
-                                        <option value="GROUP" selected>Group Tour</option>
-                                        <option value="PRIVATE">Private Tour</option>
-                                    </select>
+                                    <label for="editCheckIn" class="form-label">Check-in Date</label>
+                                    <input type="date" class="form-control" id="editCheckIn" name="checkIn" required />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="editTourDate" class="form-label">Tour Date</label>
-                                    <input type="date" class="form-control" id="editTourDate" name="tourDate" required
-                                        value="2025-04-15">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editTourTime" class="form-label">Tour Time</label>
-                                    <input type="time" class="form-control" id="editTourTime" name="tourTime" required
-                                        value="09:00">
+                                    <label for="editCheckOut" class="form-label">Check-out Date</label>
+                                    <input type="date" class="form-control" id="editCheckOut" name="checkOut" required />
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Booking Details</h5>
+                                <div class="mb-3">
+                                    <label for="editAdultsCount" class="form-label">Adults</label>
+                                    <input type="number" class="form-control" id="editAdultsCount" name="adultsCount" min="1" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editChildrenCount" class="form-label">Children</label>
+                                    <input type="number" class="form-control" id="editChildrenCount" name="childrenCount" min="0" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editStatus" class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus" name="status" required>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Delete Booking Modal -->
+    <div class="modal fade" id="deleteBookingModal" tabindex="-1" aria-labelledby="deleteBookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteBookingModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete Booking <span id="deleteBookingId" class="fw-bold"></span> created on <span id="deleteBookingDate"></span>?</p>
+                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteBookingForm" th:action="@{/admin/bookings/delete/__${bookingId}__}" method="post">
+                        <!-- CSRF Token -->
+                        <th:block th:if="${_csrf != null}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        </th:block>
+                        <input type="hidden" id="deleteBookingIdInput" name="id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM fully loaded and parsed');
 
+            // Create Booking Button
+            const createButtons = document.querySelectorAll('.create-booking-btn');
+            createButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    console.log('Create Booking button clicked');
+                });
+            });
+
+            // View Booking Modal
+            const viewButtons = document.querySelectorAll('.view-booking-btn');
+            console.log('Found', viewButtons.length, 'view buttons');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    console.log('View button clicked for booking ID:', this.getAttribute('data-booking-id'));
+                    document.getElementById('viewBookingId').textContent = this.getAttribute('data-booking-id');
+                    document.getElementById('viewBookingStatus').textContent = this.getAttribute('data-status');
+                    document.getElementById('viewBookingStatus').className = 'badge ' + {
+                        'Confirmed': 'bg-success',
+                        'Pending': 'bg-warning',
+                        'Cancelled': 'bg-danger',
+                        'Completed': 'bg-primary'
+                    }[this.getAttribute('data-status')] || 'bg-secondary';
+                    document.getElementById('viewBookingDate').textContent = this.getAttribute('data-booking-date');
+                    document.getElementById('viewRoomNumber').textContent = this.getAttribute('data-room-number');
+                    document.getElementById('viewHotelPrice').textContent = this.getAttribute('data-hotel-price');
+                    document.getElementById('viewCheckIn').textContent = this.getAttribute('data-check-in');
+                    document.getElementById('viewCheckOut').textContent = this.getAttribute('data-check-out');
+                    document.getElementById('viewUserName').textContent = this.getAttribute('data-user-name');
+                    document.getElementById('viewUserEmail').textContent = this.getAttribute('data-user-email');
+                    document.getElementById('viewUserPhone').textContent = this.getAttribute('data-user-phone');
+                });
+            });
+
+            // Edit Booking Modal
+            const editButtons = document.querySelectorAll('.edit-booking-btn');
+            console.log('Found', editButtons.length, 'edit buttons');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    console.log('Edit button clicked for booking ID:', this.getAttribute('data-booking-id'));
+                    const bookingId = this.getAttribute('data-booking-id');
+                    document.getElementById('editBookingId').value = bookingId;
+                    const editForm = document.getElementById('editBookingForm');
+                    editForm.action = `/admin/bookings/edit/${bookingId}`;
+                    document.getElementById('editUserId').value = this.getAttribute('data-user-id');
+                    document.getElementById('editRoomId').value = this.getAttribute('data-room-id');
+                    document.getElementById('editCheckIn').value = this.getAttribute('data-check-in');
+                    document.getElementById('editCheckOut').value = this.getAttribute('data-check-out');
+                    document.getElementById('editStatus').value = this.getAttribute('data-status');
+                    document.getElementById('editAdultsCount').value = this.getAttribute('data-adults-count');
+                    document.getElementById('editChildrenCount').value = this.getAttribute('data-children-count');
+                });
+            });
+
+            // Edit from View Modal
+            const editFromViewButtons = document.querySelectorAll('.edit-from-view-btn');
+            console.log('Found', editFromViewButtons.length, 'edit-from-view buttons');
+            editFromViewButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookingId = document.getElementById('viewBookingId').textContent;
+                    console.log('Edit from view clicked for booking ID:', bookingId);
+                    const editButton = document.querySelector(`.edit-booking-btn[data-booking-id="${bookingId}"]`);
+                    if (editButton) {
+                        console.log('Triggering edit button click for booking ID:', bookingId);
+                        editButton.click();
+                    } else {
+                        console.error('Edit button not found for booking ID:', bookingId);
+                    }
+                });
+            });
+
+            // Delete Booking Modal
+            const deleteButtons = document.querySelectorAll('.delete-booking-btn');
+            console.log('Found', deleteButtons.length, 'delete buttons');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    console.log('Delete button clicked for booking ID:', this.getAttribute('data-booking-id'));
+                    const bookingId = this.getAttribute('data-booking-id');
+                    document.getElementById('deleteBookingId').textContent = bookingId;
+                    document.getElementById('deleteBookingDate').textContent = this.getAttribute('data-booking-date');
+                    document.getElementById('deleteBookingIdInput').value = bookingId;
+                    const deleteForm = document.getElementById('deleteBookingForm');
+                    deleteForm.action = `/admin/bookings/delete/${bookingId}`;
+                });
+            });
+
+            // Add Booking Form Submission
+            const addBookingForm = document.getElementById('addBookingForm');
+            if (addBookingForm) {
+                addBookingForm.addEventListener('submit', function (event) {
+                    console.log('Add Booking form submitted');
+                });
+            }
+
+            // Edit Booking Form Submission
+            const editBookingForm = document.getElementById('editBookingForm');
+            if (editBookingForm) {
+                editBookingForm.addEventListener('submit', function (event) {
+                    console.log('Edit Booking form submitted');
+                });
+            }
+
+            // Delete Booking Form Submission
+            const deleteBookingForm = document.getElementById('deleteBookingForm');
+            if (deleteBookingForm) {
+                deleteBookingForm.addEventListener('submit', function (event) {
+                    console.log('Delete Booking form submitted');
+                });
+            }
+
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const closeButton = alert.querySelector('.btn-close');
+                    if (closeButton) {
+                        closeButton.click();
+                    }
+                }, 5000);
+            });
+        });
+    </script>
 </body>
-
 </html>

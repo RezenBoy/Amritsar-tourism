@@ -70,13 +70,13 @@
               <button class="btn btn-outline-secondary" type="button">Search</button>
             </div>
           </div>
-          <div class="col-md-6 text-end">
+          <!-- <div class="col-md-6 text-end">
             <div class="btn-group">
               <button type="button" class="btn btn-outline-secondary">All Users</button>
               <button type="button" class="btn btn-outline-secondary">Admins</button>
               <button type="button" class="btn btn-outline-secondary">Regular Users</button>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="card-body">
@@ -95,7 +95,7 @@
               </thead>
               <tbody>
                 <!-- Dynamically populated rows -->
-                <tr th:each="user, iterStat : ${users}" th:if="${iterStat.index < 10}">
+                <tr th:each="user, iterStat : ${users}" th:if="${iterStat.index < 10 and user.role != 'ADMIN'}">
                   <td th:text="${iterStat.count}">1</td> <!-- Serial number -->
                   <td th:text="${user?.id}">1</td>
                   <td th:text="${user?.name ?: 'User ' + iterStat.count}">Jasmeet Kaur</td>
@@ -113,10 +113,10 @@
                         data-bs-target="#viewUserModal">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                      <!-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         data-bs-target="#editUserModal">
                         <i class="bi bi-pencil"></i>
-                      </button>
+                      </button> -->
                       <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteUserModal">
                         <i class="bi bi-trash"></i>

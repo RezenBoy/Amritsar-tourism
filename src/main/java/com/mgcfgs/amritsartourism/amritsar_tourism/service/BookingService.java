@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Booking;
@@ -31,7 +33,7 @@ public class BookingService {
     public List<Booking> findAllBookings() {
         return bookingRepository.findAll();
     }
-    
+
     public List<Booking> findByHotelId(Long hotelId) {
         // Find all rooms for the hotel
         List<Room> rooms = roomRepository.findByHotelId(hotelId);
@@ -40,5 +42,20 @@ public class BookingService {
         return bookingRepository.findAll().stream()
                 .filter(booking -> roomIds.contains(booking.getRoom().getId()))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteBooking(Long id) {
+        if (!bookingRepository.existsById(id)) {
+            throw new IllegalArgumentException("Booking with ID " + id + " not found");
+        }
+        bookingRepository.deleteById(id);
+    }
+
+    public Page<Booking> getBookings(Pageable pageable, String status) {
+        if (status == null || status.isEmpty()) {
+            return bookingRepository.findAll(pageable);
+        } else {
+            return bookingRepository.findByStatus(status.toUpperCase(), pageable);
+        }
     }
 }
