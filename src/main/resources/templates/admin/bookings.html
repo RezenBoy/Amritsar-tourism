@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,6 +41,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Include navbar fragment -->
     <div th:replace="~{fragments/admin_layout :: adminNavbar}"></div>
@@ -47,13 +49,15 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Include sidebar fragment -->
-            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='bookings'" class="col-md-2"></div>
+            <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='bookings'"
+                class="col-md-2"></div>
 
             <!-- Main content area -->
             <main class="col-md-10 admin-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Manage Bookings</h2>
-                    <button class="btn btn-primary create-booking-btn" data-bs-toggle="modal" data-bs-target="#addBookingModal">
+                    <button class="btn btn-primary create-booking-btn" data-bs-toggle="modal"
+                        data-bs-target="#addBookingModal">
                         <i class="bi bi-plus-circle"></i> Create New Booking
                     </button>
                 </div>
@@ -66,25 +70,6 @@
                 <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     <span th:text="${errorMessage}"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-                <!-- Search and Filter Bar -->
-                <div class="row search-bar mb-4">
-                    <div class="col-md-6">
-                        <form th:action="@{/admin/bookings}" method="get" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search by user or room..." th:value="${param.search}" />
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <div class="btn-group">
-                            <a th:href="@{/admin/bookings(status='ALL')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'ALL'} ? 'active'">All Bookings</a>
-                            <a th:href="@{/admin/bookings(status='Confirmed')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Confirmed'} ? 'active'">Confirmed</a>
-                            <a th:href="@{/admin/bookings(status='Pending')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Pending'} ? 'active'">Pending</a>
-                            <a th:href="@{/admin/bookings(status='Cancelled')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Cancelled'} ? 'active'">Cancelled</a>
-                            <a th:href="@{/admin/bookings(status='Completed')}" class="btn btn-outline-secondary" th:classappend="${currentStatus == 'Completed'} ? 'active'">Completed</a>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Bookings Table -->
@@ -117,45 +102,46 @@
                                         <td th:text="${booking.room.id}"></td>
                                         <td th:text="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"></td>
                                         <td th:text="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"></td>
-                                        <td th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                        <td th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                        </td>
                                         <td th:text="${booking.status}"></td>
                                         <td th:text="${booking.adultsCount}"></td>
                                         <td th:text="${booking.childrenCount}"></td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-sm btn-info view-booking-btn"
-                                                        th:data-booking-id="${booking.id}"
-                                                        th:data-user-name="${booking.user.name}"
-                                                        th:data-user-email="${booking.user.email}"
-                                                        th:data-user-phone="${booking.user.phone}"
-                                                        th:data-room-number="${booking.room.id}"
-                                                        th:data-hotel-price="${booking.hotelPrice}"
-                                                        th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
-                                                        th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
-                                                        th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
-                                                        th:data-status="${booking.status}"
-                                                        data-bs-toggle="modal" data-bs-target="#viewBookingModal">
+                                                    th:data-booking-id="${booking.id}"
+                                                    th:data-user-name="${booking.user.name}"
+                                                    th:data-user-email="${booking.user.email}"
+                                                    th:data-user-phone="${booking.user.phone}"
+                                                    th:data-room-number="${booking.room.id}"
+                                                    th:data-hotel-price="${booking.hotelPrice}"
+                                                    th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
+                                                    th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
+                                                    th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                                    th:data-status="${booking.status}" data-bs-toggle="modal"
+                                                    data-bs-target="#viewBookingModal">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-primary edit-booking-btn"
-                                                        th:data-booking-id="${booking.id}"
-                                                        th:data-user-id="${booking.user.id}"
-                                                        th:data-user-name="${booking.user.name}"
-                                                        th:data-user-email="${booking.user.email}"
-                                                        th:data-user-phone="${booking.user.phone}"
-                                                        th:data-room-id="${booking.room.id}"
-                                                        th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
-                                                        th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
-                                                        th:data-status="${booking.status}"
-                                                        th:data-adults-count="${booking.adultsCount}"
-                                                        th:data-children-count="${booking.childrenCount}"
-                                                        data-bs-toggle="modal" data-bs-target="#editBookingModal">
+                                                    th:data-booking-id="${booking.id}"
+                                                    th:data-user-id="${booking.user.id}"
+                                                    th:data-user-name="${booking.user.name}"
+                                                    th:data-user-email="${booking.user.email}"
+                                                    th:data-user-phone="${booking.user.phone}"
+                                                    th:data-room-id="${booking.room.id}"
+                                                    th:data-check-in="${#temporals.format(booking.checkIn, 'yyyy-MM-dd')}"
+                                                    th:data-check-out="${#temporals.format(booking.checkOut, 'yyyy-MM-dd')}"
+                                                    th:data-status="${booking.status}"
+                                                    th:data-adults-count="${booking.adultsCount}"
+                                                    th:data-children-count="${booking.childrenCount}"
+                                                    data-bs-toggle="modal" data-bs-target="#editBookingModal">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-danger delete-booking-btn"
-                                                        th:data-booking-id="${booking.id}"
-                                                        th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteBookingModal">
+                                                    th:data-booking-id="${booking.id}"
+                                                    th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteBookingModal">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </div>
@@ -174,21 +160,21 @@
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                                     <a class="page-link"
-                                       th:href="@{/admin/bookings(page=${currentPage - 1}, size=${size}, status=${currentStatus})}"
-                                       aria-label="Previous">
+                                        th:href="@{/admin/bookings(page=${currentPage - 1}, size=${size}, status=${currentStatus})}"
+                                        aria-label="Previous">
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
                                 <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
                                     th:classappend="${pageNumber == currentPage} ? 'active'">
                                     <a class="page-link"
-                                       th:href="@{/admin/bookings(page=${pageNumber}, size=${size}, status=${currentStatus})}"
-                                       th:text="${pageNumber}"></a>
+                                        th:href="@{/admin/bookings(page=${pageNumber}, size=${size}, status=${currentStatus})}"
+                                        th:text="${pageNumber}"></a>
                                 </li>
                                 <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                                     <a class="page-link"
-                                       th:href="@{/admin/bookings(page=${currentPage + 1}, size=${size}, status=${currentStatus})}"
-                                       aria-label="Next">
+                                        th:href="@{/admin/bookings(page=${currentPage + 1}, size=${size}, status=${currentStatus})}"
+                                        aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                     </a>
                                 </li>
@@ -201,7 +187,8 @@
     </div>
 
     <!-- View Booking Modal -->
-    <div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -241,14 +228,16 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary edit-from-view-btn" data-bs-toggle="modal" data-bs-target="#editBookingModal" data-bs-dismiss="modal">Edit</button>
+                    <button type="button" class="btn btn-primary edit-from-view-btn" data-bs-toggle="modal"
+                        data-bs-target="#editBookingModal" data-bs-dismiss="modal">Edit</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Add Booking Modal -->
-    <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -257,7 +246,8 @@
                 </div>
                 <div class="modal-body">
                     <div th:if="${booking != null}">
-                        <form id="addBookingForm" th:action="@{/admin/bookings/add}" method="post" th:object="${booking}">
+                        <form id="addBookingForm" th:action="@{/admin/bookings/add}" method="post"
+                            th:object="${booking}">
                             <!-- CSRF Token -->
                             <th:block th:if="${_csrf != null}">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -269,7 +259,8 @@
                                         <label for="addUserId" class="form-label">Select Customer</label>
                                         <select class="form-select" id="addUserId" th:field="*{user.id}" required>
                                             <option value="">-- Select Customer --</option>
-                                            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
+                                            <option th:each="user : ${users}" th:value="${user.id}"
+                                                th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -279,16 +270,20 @@
                                         <label for="addRoomId" class="form-label">Select Room</label>
                                         <select class="form-select" id="addRoomId" th:field="*{room.id}" required>
                                             <option value="">-- Select Room --</option>
-                                            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'"></option>
+                                            <option th:each="room : ${rooms}" th:value="${room.id}"
+                                                th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'">
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="addCheckIn" class="form-label">Check-in Date</label>
-                                        <input type="date" class="form-control" id="addCheckIn" th:field="*{checkIn}" required />
+                                        <input type="date" class="form-control" id="addCheckIn" th:field="*{checkIn}"
+                                            required />
                                     </div>
                                     <div class="mb-3">
                                         <label for="addCheckOut" class="form-label">Check-out Date</label>
-                                        <input type="date" class="form-control" id="addCheckOut" th:field="*{checkOut}" required />
+                                        <input type="date" class="form-control" id="addCheckOut" th:field="*{checkOut}"
+                                            required />
                                     </div>
                                 </div>
                             </div>
@@ -297,11 +292,13 @@
                                     <h5 class="mb-3">Booking Details</h5>
                                     <div class="mb-3">
                                         <label for="addAdultsCount" class="form-label">Adults</label>
-                                        <input type="number" class="form-control" id="addAdultsCount" th:field="*{adultsCount}" min="1" value="1" required />
+                                        <input type="number" class="form-control" id="addAdultsCount"
+                                            th:field="*{adultsCount}" min="1" value="1" required />
                                     </div>
                                     <div class="mb-3">
                                         <label for="addChildrenCount" class="form-label">Children</label>
-                                        <input type="number" class="form-control" id="addChildrenCount" th:field="*{childrenCount}" min="0" value="0" required />
+                                        <input type="number" class="form-control" id="addChildrenCount"
+                                            th:field="*{childrenCount}" min="0" value="0" required />
                                     </div>
                                     <div class="mb-3">
                                         <label for="addStatus" class="form-label">Status</label>
@@ -329,7 +326,8 @@
     </div>
 
     <!-- Edit Booking Modal -->
-    <div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -350,7 +348,8 @@
                                     <label for="editUserId" class="form-label">Select Customer</label>
                                     <select class="form-select" id="editUserId" name="user.id" required>
                                         <option value="">-- Select Customer --</option>
-                                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
+                                        <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.name} + ' (' + ${user.email} + ')'"></option>
                                     </select>
                                 </div>
                             </div>
@@ -360,7 +359,9 @@
                                     <label for="editRoomId" class="form-label">Select Room</label>
                                     <select class="form-select" id="editRoomId" name="room.id" required>
                                         <option value="">-- Select Room --</option>
-                                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'"></option>
+                                        <option th:each="room : ${rooms}" th:value="${room.id}"
+                                            th:text="'Room ' + ${room.roomNumber} + ' (' + ${room.hotel.name} + ')'">
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -369,7 +370,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="editCheckOut" class="form-label">Check-out Date</label>
-                                    <input type="date" class="form-control" id="editCheckOut" name="checkOut" required />
+                                    <input type="date" class="form-control" id="editCheckOut" name="checkOut"
+                                        required />
                                 </div>
                             </div>
                         </div>
@@ -378,11 +380,13 @@
                                 <h5 class="mb-3">Booking Details</h5>
                                 <div class="mb-3">
                                     <label for="editAdultsCount" class="form-label">Adults</label>
-                                    <input type="number" class="form-control" id="editAdultsCount" name="adultsCount" min="1" required />
+                                    <input type="number" class="form-control" id="editAdultsCount" name="adultsCount"
+                                        min="1" required />
                                 </div>
                                 <div class="mb-3">
                                     <label for="editChildrenCount" class="form-label">Children</label>
-                                    <input type="number" class="form-control" id="editChildrenCount" name="childrenCount" min="0" required />
+                                    <input type="number" class="form-control" id="editChildrenCount"
+                                        name="childrenCount" min="0" required />
                                 </div>
                                 <div class="mb-3">
                                     <label for="editStatus" class="form-label">Status</label>
@@ -406,15 +410,18 @@
     </div>
 
     <!-- Delete Booking Modal -->
-    <div class="modal fade" id="deleteBookingModal" tabindex="-1" aria-labelledby="deleteBookingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteBookingModal" tabindex="-1" aria-labelledby="deleteBookingModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteBookingModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete Booking <span id="deleteBookingId" class="fw-bold"></span> created on <span id="deleteBookingDate"></span>?</p>
+                    <p>Are you sure you want to delete Booking <span id="deleteBookingId" class="fw-bold"></span>
+                        created on <span id="deleteBookingDate"></span>?</p>
                     <p class="text-danger"><small>This action cannot be undone.</small></p>
                 </div>
                 <div class="modal-footer">
@@ -559,4 +566,5 @@
         });
     </script>
 </body>
+
 </html>

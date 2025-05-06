@@ -66,6 +66,19 @@ public class AdminController {
         return "admin/users"; // Would point to templates/admin/users.html
     }
 
+    @PostMapping("/users/delete")
+    public String deleteUser(
+            @RequestParam("id") Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(id);
+            redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error deleting user: " + e.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("/bookings")
     public String showHotelsPage(Model model) {
         // Assuming you have a BookingService to fetch bookings
@@ -223,24 +236,26 @@ public class AdminController {
 
     // @GetMapping("/bookings")
     // public String showBookingsPage(
-    //         @RequestParam(value = "page", defaultValue = "1") int page,
-    //         @RequestParam(value = "size", defaultValue = "10") int size,
-    //         @RequestParam(value = "status", required = false) String status,
-    //         Model model) {
-    //     logger.info("Accessing bookings page: page={}, size={}, status={}", page, size, status);
-    //     Pageable pageable = PageRequest.of(page - 1, size);
-    //     Page<Booking> bookingPage = bookingService.getBookings(pageable, status);
-    //     model.addAttribute("bookings", bookingPage.getContent());
-    //     model.addAttribute("currentPage", page);
-    //     model.addAttribute("totalPages", bookingPage.getTotalPages());
-    //     model.addAttribute("size", size);
-    //     model.addAttribute("currentStatus", status != null ? status : "ALL");
-    //     List<RegisterUser> users = userService.findAll();
-    //     List<Room> rooms = roomService.findAll();
-    //     model.addAttribute("users", users);
-    //     model.addAttribute("rooms", rooms);
-    //     model.addAttribute("booking", new Booking()); // Ensure a new Booking object is always added
-    //     return "admin/managebookings";
+    // @RequestParam(value = "page", defaultValue = "1") int page,
+    // @RequestParam(value = "size", defaultValue = "10") int size,
+    // @RequestParam(value = "status", required = false) String status,
+    // Model model) {
+    // logger.info("Accessing bookings page: page={}, size={}, status={}", page,
+    // size, status);
+    // Pageable pageable = PageRequest.of(page - 1, size);
+    // Page<Booking> bookingPage = bookingService.getBookings(pageable, status);
+    // model.addAttribute("bookings", bookingPage.getContent());
+    // model.addAttribute("currentPage", page);
+    // model.addAttribute("totalPages", bookingPage.getTotalPages());
+    // model.addAttribute("size", size);
+    // model.addAttribute("currentStatus", status != null ? status : "ALL");
+    // List<RegisterUser> users = userService.findAll();
+    // List<Room> rooms = roomService.findAll();
+    // model.addAttribute("users", users);
+    // model.addAttribute("rooms", rooms);
+    // model.addAttribute("booking", new Booking()); // Ensure a new Booking object
+    // is always added
+    // return "admin/managebookings";
     // }
 
     @PostMapping("/bookings/delete/{id}")
@@ -254,17 +269,6 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete booking: " + e.getMessage());
         }
         return "redirect:/admin/bookings";
-    }
-
-    @GetMapping("/delete-user")
-    public String deleteUser(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
-        try {
-            userService.deleteUserById(id);
-            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
-        }
-        return "redirect:/admin/users";
     }
 
     // @GetMapping("/edit-user")
