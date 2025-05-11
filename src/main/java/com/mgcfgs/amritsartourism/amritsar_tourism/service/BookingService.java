@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Booking;
+import com.mgcfgs.amritsartourism.amritsar_tourism.model.Hotel;
+import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.BookingRepository;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.RoomRepository;
@@ -57,5 +59,21 @@ public class BookingService {
         } else {
             return bookingRepository.findByStatus(status.toUpperCase(), pageable);
         }
+    }
+
+    public void saveBookingHistory(Booking booking, RegisterUser user, Room room, Hotel hotel) {
+        Booking bookingHistory = new Booking();
+        // bookingHistory.setUserId(user.getId());
+        // bookingHistory.setUserName(user.getName());
+        // bookingHistory.setUserEmail(user.getEmail());
+        // bookingHistory.setHotelId(hotel.getId());
+        // bookingHistory.setHotelName(hotel.getHotelName());
+        // bookingHistory.setRoomId(room.getId());
+        // bookingHistory.setRoomNumber(room.getRoomNumber());
+        // bookingHistory.setBookingDate(LocalDate.now().toString());
+        // bookingHistory.setCheckInDate(booking.getCheckInDate().toString());
+        // bookingHistory.setCheckOutDate(booking.getCheckOutDate().toString());
+
+        bookingRepository.save(bookingHistory);
     }
 }

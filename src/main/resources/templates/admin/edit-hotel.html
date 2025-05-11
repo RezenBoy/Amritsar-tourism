@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Hotel - Admin Panel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <style>
+        .admin-header {
+            background-color: #d2691e;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .admin-sidebar {
+            background-color: #343a40;
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .admin-sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background-color: #d2691e;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include navbar fragment -->
+    <div th:replace="fragments/admin_layout :: adminNavbar"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include sidebar fragment -->
+            <div th:replace="fragments/admin_layout :: adminSidebar" th:with="currentPage='hotels'" class="col-md-2">
+            </div>
+
+            <!-- Main content area -->
+            <main class="col-md-10">
+                <div class="admin-content">
+                    <div class="container-fluid">
+                        <!-- Page Header -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h2>Update Hotel Info</h2>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                                        <li class="breadcrumb-item"><a th:href="@{/admin/managehotels}">Manage
+                                                Hotels</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Edit Hotel</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Success/Error Message -->
+                        <div class="message-container slide-notification" th:if="${successMessage != null}">
+                            <div class="alert alert-success" th:text="${successMessage}"></div>
+                        </div>
+                        <div class="message-container slide-notification" th:if="${errorMessage != null}">
+                            <div class="alert alert-danger" th:text="${errorMessage}"></div>
+                        </div>
+
+                        <!-- Add Hotel Form -->
+                        <div class="card p-4 shadow">
+                            <form th:action="@{/admin/add-hotel}" th:object="${hotel}" method="post"
+                                enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}" />
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Hotel Name</label>
+                                    <input type="text" th:field="*{name}" id="name" class="form-control"
+                                        placeholder="Enter hotel name" required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('name')}"
+                                        th:errors="*{name}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" th:field="*{location}" id="location" class="form-control"
+                                        placeholder="Enter location" required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('location')}"
+                                        th:errors="*{location}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea th:field="*{description}" id="description" class="form-control"
+                                        placeholder="Enter description" rows="3"></textarea>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                        th:errors="*{description}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="startingPrice" class="form-label">Minimum Price per Night</label>
+                                    <input type="number" th:field="*{startingPrice}" id="price" class="form-control"
+                                        placeholder="Enter price" min="0" step="100">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('startingPrice')}"
+                                        th:errors="*{price}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="rating" class="form-label">Rating (0-5)</label>
+                                    <input type="number" th:field="*{rating}" id="rating" class="form-control"
+                                        placeholder="Enter rating" min="0" max="5" step="0.1">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('rating')}"
+                                        th:errors="*{rating}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="imageFile" class="form-label">Hotel Image</label>
+
+                                    <!-- Show existing image if available -->
+                                    <div th:if="${hotel.imagePath != null}" class="mb-2">
+                                        <p>Current Image:</p>
+                                        <img th:src="@{${hotel.imagePath}}" alt="Hotel Image" class="img-thumbnail"
+                                            style="max-width: 200px;">
+                                    </div>
+
+                                    <input type="hidden" th:field="*{imagePath}" />
+                                    <!-- File input for new image -->
+                                    <input type="file" id="imageFile" name="imageFile" class="form-control"
+                                        accept="image/*">
+                                    <small class="form-text text-muted">Upload a new image of the hotel (JPEG, PNG,
+                                        etc.).</small>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-success">Add Hotel</button>
+                                    <a th:href="@{/admin/manage-hotel}" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script th:src="@{/javascript/user.js}"></script>
+</body>
+
+</html>
