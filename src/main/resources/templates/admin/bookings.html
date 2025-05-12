@@ -122,7 +122,7 @@
                                                     th:data-status="${booking.status}" data-bs-toggle="modal"
                                                     data-bs-target="#viewBookingModal">
                                                     <i class="bi bi-eye"></i>
-                                                </button>
+                                                <!-- </button>
                                                 <button type="button" class="btn btn-sm btn-primary edit-booking-btn"
                                                     th:data-booking-id="${booking.id}"
                                                     th:data-user-id="${booking.user.id}"
@@ -137,7 +137,7 @@
                                                     th:data-children-count="${booking.childrenCount}"
                                                     data-bs-toggle="modal" data-bs-target="#editBookingModal">
                                                     <i class="bi bi-pencil"></i>
-                                                </button>
+                                                </button> -->
                                                 <button type="button" class="btn btn-sm btn-danger delete-booking-btn"
                                                     th:data-booking-id="${booking.id}"
                                                     th:data-booking-date="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm:ss')}"

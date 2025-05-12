@@ -29,4 +29,12 @@ public class RoomService {
     public List<Room> findAll() {
         return roomRepository.findAll();
     }
+
+    public Room getRoomById(Long id) {
+        return roomRepository.findById(id).orElse(null);
+    }
+
+    public boolean existsByHotelIdAndRoomNumber(Long id, String roomNumber) {
+        return roomRepository.existsByHotelIdAndRoomNumber(id, roomNumber);
+    }
 }

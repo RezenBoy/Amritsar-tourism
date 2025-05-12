@@ -18,11 +18,8 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "room_number", unique = true, nullable = false)
+    @Column(name = "room_number", nullable = false)
     private String roomNumber;
-
-    // @Column(name = "type", nullable = false)
-    // private String type; // e.g., Single, Double, Deluxe
 
     @Column(name = "category", nullable = false)
     private String category; // e.g., AC, Non-AC

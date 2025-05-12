@@ -13,24 +13,28 @@ import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    // Custom query to find rooms by price range
-    List<Room> findByPricePerNightBetween(Double min, Double max);
+        // Custom query to find rooms by price range
+        List<Room> findByPricePerNightBetween(Double min, Double max);
 
-    // Custom query to find available rooms
-    List<Room> findByAvailableTrue();
+        // Custom query to find available rooms
+        List<Room> findByAvailableTrue();
 
-    // Find a room by room number
-    Room findByRoomNumber(String roomNumber);
+        // Find a room by room number
+        Room findByRoomNumber(String roomNumber);
 
-    // Find rooms by hotel ID
-    List<Room> findByHotelId(Long hotelId);
+        // Find rooms by hotel ID
+        List<Room> findByHotelId(Long hotelId);
 
-    // Find available rooms for a hotel and date range
-    @Query("SELECT r FROM Room r LEFT JOIN Booking b ON b.room.id = r.id " +
-            "AND (b.checkIn < :checkOut AND b.checkOut > :checkIn) " +
-            "WHERE r.hotel.name = :hotelName AND r.available = true AND b.id IS NULL")
-    List<Room> findAvailableRooms(
-            @Param("checkIn") LocalDate checkIn,
-            @Param("checkOut") LocalDate checkOut,
-            @Param("hotelName") String hotelName);
+        // Find available rooms for a hotel and date range
+        @Query("SELECT r FROM Room r LEFT JOIN Booking b ON b.room.id = r.id " +
+                        "AND (b.checkIn < :checkOut AND b.checkOut > :checkIn) " +
+                        "WHERE r.hotel.name = :hotelName AND r.available = true AND b.id IS NULL")
+        List<Room> findAvailableRooms(
+                        @Param("checkIn") LocalDate checkIn,
+                        @Param("checkOut") LocalDate checkOut,
+                        @Param("hotelName") String hotelName);
+
+        @Query("SELECT COUNT(r) > 0 FROM Room r WHERE r.hotel.id = :hotelId AND r.roomNumber = :roomNumber AND r.id != :roomId")
+        boolean existsByHotelIdAndRoomNumber(@Param("hotelId") Long hotelId,
+                        @Param("roomNumber") String roomNumber);
 }

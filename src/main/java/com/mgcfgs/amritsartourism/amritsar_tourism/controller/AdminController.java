@@ -249,4 +249,58 @@ public class AdminController {
             return "redirect:/admin/hotels";
         }
     }
+
+    @GetMapping("/rooms/{id}/edit") // Now this will be /admin/rooms/{id}/edit
+    public String showEditRoomForm(@PathVariable("id") Long id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Room room = roomService.getRoomById(id);
+            List<Hotel> hotels = hotelService.getAllHotels(); // Fetch all hotels
+            model.addAttribute("hotels", hotels); // Add hotels to the model for display
+            model.addAttribute("room", room);
+            return "admin/edit-room"; // Make sure this template exists
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/admin/rooms";
+        }
+    }
+
+    @PostMapping("/rooms/{id}/edit")
+    public String updateRoom(@PathVariable("id") Long id,
+            @Valid @ModelAttribute("room") Room updatedRoom,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        // Get the existing room from database
+        Room existingRoom = roomService.getRoomById(id);
+
+        // Check if room number is being changed to one that already exists in the same
+        // hotel
+        if (!existingRoom.getRoomNumber().equals(updatedRoom.getRoomNumber()) &&
+                roomService.existsByHotelIdAndRoomNumber(updatedRoom.getHotel().getId(), updatedRoom.getRoomNumber())) {
+            model.addAttribute("errorMessage", "A room with this number already exists in the selected hotel.");
+            model.addAttribute("hotels", hotelService.getAllHotels());
+            return "admin/edit-room";
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("hotels", hotelService.getAllHotels());
+            return "admin/edit-room";
+        }
+
+        // Update the existing room with new values
+        existingRoom.setRoomNumber(updatedRoom.getRoomNumber());
+        existingRoom.setCategory(updatedRoom.getCategory());
+        existingRoom.setCapacity(updatedRoom.getCapacity());
+        existingRoom.setPricePerNight(updatedRoom.getPricePerNight());
+        existingRoom.setAvailable(updatedRoom.getAvailable());
+        existingRoom.setHotel(updatedRoom.getHotel());
+
+        roomService.saveRoom(existingRoom);
+        redirectAttributes.addFlashAttribute("successMessage", "Room updated successfully!");
+        return "redirect:/admin/rooms";
+    }
+
 }
