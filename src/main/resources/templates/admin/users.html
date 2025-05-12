@@ -58,7 +58,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2>Manage Users</h2>
         </div>
-        <!-- Alert Messages -->
+        <!-- Alert for Success/Error Messages -->
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
           <span th:text="${successMessage}"></span>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -235,23 +235,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function openDeleteModal(button) {
-      const userId = button.getAttribute("data-user-id");
-      const userName = button.getAttribute("data-user-name");
-
-      // Set text in modal
-      document.getElementById("deleteUserId").textContent = userId;
-      document.getElementById("deleteUserName").textContent = userName;
-
-      // Set form input value
-      document.getElementById("delete-user-id").value = userId;
-
-      // Set form action dynamically
-      const form = document.getElementById("deleteUserForm");
-      form.action = `/admin/users/delete/${userId}`;
-    }
-  </script>
+  <script th:src="@{/javascript/user.js}"></script>
 
 </body>
 

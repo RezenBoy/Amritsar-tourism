@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +56,15 @@ public class AdminController {
     // Constructor injection for the HotelService
 
     @GetMapping("/dashboard") // Will map to /admin/dashboard
-    public String showAdminPage() {
+    public String showAdminPage(Model model) {
+        int totalUsers = userService.getAllUsers().size();
+        int totalHotels = hotelService.getAllHotels().size();
+        int totalBookings = bookingService.findAllBookings().size();
+        int totalRooms = roomService.getAllRooms().size();
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("totalHotels", totalHotels);
+        model.addAttribute("totalBookings", totalBookings);
+        model.addAttribute("totalRooms", totalRooms);
         return "admin/dashboard"; // Points to templates/admin/dashboard.html
     }
 
@@ -69,27 +76,16 @@ public class AdminController {
         return "admin/users"; // Would point to templates/admin/users.html
     }
 
-    // @PostMapping("/users/delete")
-    // public String deleteUser(
-    // @RequestParam("id") Long id,
-    // RedirectAttributes redirectAttributes) {
-    // try {
-    // userService.deleteUserById(id);
-    // redirectAttributes.addFlashAttribute("message", "User deleted
-    // successfully!");
-    // } catch (Exception e) {
-    // redirectAttributes.addFlashAttribute("error", "Error deleting user: " +
-    // e.getMessage());
-    // }
-    // return "redirect:/admin/users";
-    // }
-
-    @GetMapping("/bookings")
-    public String showHotelsPage(Model model) {
-        // Assuming you have a BookingService to fetch bookings
-        List<Booking> bookings = bookingService.findAllBookings();
-        model.addAttribute("bookings", bookings); // Add bookings to the model for display
-        return "admin/bookings"; // Would point to templates/admin/hotels.html
+    @PostMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "The user could not be deleted: because it is linked to a booking");
+        }
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/addroom")
@@ -125,7 +121,7 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("successMessage", "Room added successfully!");
             return "redirect:/admin/rooms";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to add room: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "The room with the same Room number already exists.");
             return "redirect:/admin/addroom";
         }
     }
@@ -134,6 +130,91 @@ public class AdminController {
     public String viewRooms(Model model) {
         model.addAttribute("rooms", roomService.getAllRooms());
         return "admin/managerooms";
+    }
+
+    @GetMapping("/rooms/{id}/edit") // Now this will be /admin/rooms/{id}/edit
+    public String showEditRoomForm(@PathVariable("id") Long id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Room room = roomService.getRoomById(id);
+            List<Hotel> hotels = hotelService.getAllHotels(); // Fetch all hotels
+            model.addAttribute("hotels", hotels); // Add hotels to the model for display
+            model.addAttribute("room", room);
+            return "admin/edit-room"; // Make sure this template exists
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/admin/rooms";
+        }
+    }
+
+    @PostMapping("/rooms/{id}/edit")
+    public String updateRoom(@PathVariable("id") Long id,
+            @Valid @ModelAttribute("room") Room updatedRoom,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        // Get the existing room from database
+        Room existingRoom = roomService.getRoomById(id);
+
+        // Check if room number is being changed to one that already exists in the same
+        // hotel
+        if (!existingRoom.getRoomNumber().equals(updatedRoom.getRoomNumber()) &&
+                roomService.existsByHotelIdAndRoomNumber(updatedRoom.getHotel().getId(), updatedRoom.getRoomNumber())) {
+            model.addAttribute("errorMessage", "A room with this number already exists in the selected hotel.");
+            model.addAttribute("hotels", hotelService.getAllHotels());
+            return "admin/edit-room";
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("hotels", hotelService.getAllHotels());
+            return "admin/edit-room";
+        }
+
+        // Update the existing room with new values
+        existingRoom.setRoomNumber(updatedRoom.getRoomNumber());
+        existingRoom.setCategory(updatedRoom.getCategory());
+        existingRoom.setCapacity(updatedRoom.getCapacity());
+        existingRoom.setPricePerNight(updatedRoom.getPricePerNight());
+        existingRoom.setAvailable(updatedRoom.getAvailable());
+        existingRoom.setHotel(updatedRoom.getHotel());
+
+        roomService.saveRoom(existingRoom);
+        redirectAttributes.addFlashAttribute("successMessage", "Room updated successfully!");
+        return "redirect:/admin/rooms";
+    }
+
+    @PostMapping("/delete-room")
+    public String deleteRoom(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            roomService.deleteRoom(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Room deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete room: " + e.getMessage());
+        }
+        return "redirect:/admin/rooms";
+    }
+
+    @GetMapping("/bookings")
+    public String showHotelsPage(Model model) {
+        // Assuming you have a BookingService to fetch bookings
+        List<Booking> bookings = bookingService.findAllBookings();
+        model.addAttribute("bookings", bookings); // Add bookings to the model for display
+        return "admin/bookings"; // Would point to templates/admin/hotels.html
+    }
+
+    @PostMapping("/bookings/delete/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        logger.info("Deleting booking ID {}", id);
+        try {
+            bookingService.deleteBooking(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Booking deleted successfully!");
+        } catch (Exception e) {
+            logger.error("Failed to delete booking with ID {}: {}", id, e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete booking: " + e.getMessage());
+        }
+        return "redirect:/admin/bookings";
     }
 
     @GetMapping("/add-hotel")
@@ -214,42 +295,6 @@ public class AdminController {
         return "redirect:/admin/manage-hotel";
     }
 
-    @PostMapping("/delete-room")
-    public String deleteRoom(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
-        try {
-            roomService.deleteRoom(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Room deleted successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete room: " + e.getMessage());
-        }
-        return "redirect:/admin/rooms";
-    }
-
-    @PostMapping("/bookings/delete/{id}")
-    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        logger.info("Deleting booking ID {}", id);
-        try {
-            bookingService.deleteBooking(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Booking deleted successfully!");
-        } catch (Exception e) {
-            logger.error("Failed to delete booking with ID {}: {}", id, e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete booking: " + e.getMessage());
-        }
-        return "redirect:/admin/bookings";
-    }
-
-    @PostMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            userService.deleteUserById(id);
-            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "The user could not be deleted: because it is linked to a booking");
-        }
-        return "redirect:/admin/users";
-    }
-
     @GetMapping("/hotels/{id}/edit") // Now this will be /admin/hotels/{id}/edit
     public String showEditHotelForm(@PathVariable("id") Long id,
             Model model,
@@ -263,59 +308,6 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/admin/hotels";
         }
-    }
-
-    @GetMapping("/rooms/{id}/edit") // Now this will be /admin/rooms/{id}/edit
-    public String showEditRoomForm(@PathVariable("id") Long id,
-            Model model,
-            RedirectAttributes redirectAttributes) {
-        try {
-            Room room = roomService.getRoomById(id);
-            List<Hotel> hotels = hotelService.getAllHotels(); // Fetch all hotels
-            model.addAttribute("hotels", hotels); // Add hotels to the model for display
-            model.addAttribute("room", room);
-            return "admin/edit-room"; // Make sure this template exists
-        } catch (EntityNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/admin/rooms";
-        }
-    }
-
-    @PostMapping("/rooms/{id}/edit")
-    public String updateRoom(@PathVariable("id") Long id,
-            @Valid @ModelAttribute("room") Room updatedRoom,
-            BindingResult result,
-            Model model,
-            RedirectAttributes redirectAttributes) {
-
-        // Get the existing room from database
-        Room existingRoom = roomService.getRoomById(id);
-
-        // Check if room number is being changed to one that already exists in the same
-        // hotel
-        if (!existingRoom.getRoomNumber().equals(updatedRoom.getRoomNumber()) &&
-                roomService.existsByHotelIdAndRoomNumber(updatedRoom.getHotel().getId(), updatedRoom.getRoomNumber())) {
-            model.addAttribute("errorMessage", "A room with this number already exists in the selected hotel.");
-            model.addAttribute("hotels", hotelService.getAllHotels());
-            return "admin/edit-room";
-        }
-
-        if (result.hasErrors()) {
-            model.addAttribute("hotels", hotelService.getAllHotels());
-            return "admin/edit-room";
-        }
-
-        // Update the existing room with new values
-        existingRoom.setRoomNumber(updatedRoom.getRoomNumber());
-        existingRoom.setCategory(updatedRoom.getCategory());
-        existingRoom.setCapacity(updatedRoom.getCapacity());
-        existingRoom.setPricePerNight(updatedRoom.getPricePerNight());
-        existingRoom.setAvailable(updatedRoom.getAvailable());
-        existingRoom.setHotel(updatedRoom.getHotel());
-
-        roomService.saveRoom(existingRoom);
-        redirectAttributes.addFlashAttribute("successMessage", "Room updated successfully!");
-        return "redirect:/admin/rooms";
     }
 
 }

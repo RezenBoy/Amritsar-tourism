@@ -27,9 +27,10 @@
             <ul class="list-group list-group-flush" th:if="${activeBookings != null and !activeBookings.isEmpty()}">
                 <li class="list-group-item" th:each="booking : ${activeBookings}">
                     <strong th:text="${booking.hotelName}">Hotel Name</strong> <br>
+                    Room-no: <span th:text="${booking.roomNumber}"></span><br>
                     Check-in: <span th:text="${booking.checkInDate}"></span><br>
                     Check-out: <span th:text="${booking.checkOutDate}"></span><br>
-                    Guests: <span th:text="${booking.guests}"></span>
+                    Guests: <span th:text="${booking.userName}"></span>
                 </li>
             </ul>
             <div class="card-body text-muted" th:if="${activeBookings == null or activeBookings.isEmpty()}">
@@ -47,7 +48,7 @@
                     <strong th:text="${booking.hotelName}">Hotel Name</strong> <br>
                     Check-in: <span th:text="${booking.checkInDate}"></span><br>
                     Check-out: <span th:text="${booking.checkOutDate}"></span><br>
-                    Guests: <span th:text="${booking.guests}"></span>
+                    Guests: <span th:text="${booking.userName}"></span>
                 </li>
             </ul>
             <div class="card-body text-muted" th:if="${pastBookings == null or pastBookings.isEmpty()}">

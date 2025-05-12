@@ -18,11 +18,11 @@ public class BookingHistory {
     private String userEmail;
 
     // Hotel details
-    private Long hotelId;
+    // private Long hotelId;
     private String hotelName;
 
     // Room details
-    private String roomId;
+    private Long roomId;
     private String roomNumber;
     private Long adultCount;
     private Long childCount;
@@ -36,12 +36,12 @@ public class BookingHistory {
     public BookingHistory() {
     }
 
-    public BookingHistory(Long userId, String userName, String userEmail, Long hotelId, String hotelName, String roomId,
+    public BookingHistory(Long userId, String userName, String userEmail, String hotelName, Long roomId,
             String roomNumber, Long bookingId, String bookingDate, String checkInDate, String checkOutDate) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
-        this.hotelId = hotelId;
+        // this.hotelId = hotelId;
         this.hotelName = hotelName;
         this.roomId = roomId;
         this.roomNumber = roomNumber;
@@ -83,14 +83,6 @@ public class BookingHistory {
         this.userEmail = userEmail;
     }
 
-    public Long getHotelId() {
-        return hotelId;
-    }
-
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
-
     public String getHotelName() {
         return hotelName;
     }
@@ -99,11 +91,11 @@ public class BookingHistory {
         this.hotelName = hotelName;
     }
 
-    public String getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
@@ -170,7 +162,6 @@ public class BookingHistory {
                 ", userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", userEmail='" + userEmail + '\'' +
-                ", hotelId=" + hotelId +
                 ", hotelName='" + hotelName + '\'' +
                 ", roomId='" + roomId + '\'' +
                 ", roomNumber='" + roomNumber + '\'' +

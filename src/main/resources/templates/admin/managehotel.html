@@ -77,12 +77,16 @@
                             </div>
                         </div>
 
-                        <!-- Success/Error Message -->
-                        <div class="message-container slide-notification" th:if="${successMessage != null}">
-                            <div class="alert alert-success" th:text="${successMessage}"></div>
+                        <!-- Alert for Success/Error Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="message-container slide-notification" th:if="${errorMessage != null}">
-                            <div class="alert alert-danger" th:text="${errorMessage}"></div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
                         <!-- Search and Filter -->
@@ -234,31 +238,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script th:src="@{/javascript/user.js}"></script>
-    <script>
 
-        document.querySelectorAll(".delete-hotel-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const hotelId = button.getAttribute("data-hotel-id");
-                document.getElementById("hotelIdToDelete").value = hotelId;
-            });
-        });
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set up delete modal
-            const deleteButtons = document.querySelectorAll('.delete-hotel-btn');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const hotelId = this.getAttribute('data-hotel-id');
-                    const hotelName = this.getAttribute('data-hotel-name');
-
-                    document.getElementById('hotelIdToDelete').value = hotelId;
-                    document.getElementById('deleteHotelName').textContent = hotelName;
-                });
-            });
-        });
-    </script>
 </body>
 
 </html>

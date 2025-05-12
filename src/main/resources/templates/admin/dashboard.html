@@ -85,22 +85,22 @@
 
           <div class="col-md-3">
             <div class="stats-card">
-              <h3>Revenue</h3>
-              <div class="number" th:text="${monthlyRevenue ?: '₹5,40,000'}">₹5,40,000</div>
+              <h3>Total Rooms</h3>
+              <div class="number" th:text="${totalRooms ?: '55'}">₹55</div>
             </div>
           </div>
 
           <div class="col-md-3">
             <div class="stats-card">
               <h3>Hotels</h3>
-              <div class="number" th:text="${hotelCount ?: '36'}">36</div>
+              <div class="number" th:text="${totalHotels ?: '36'}">36</div>
             </div>
           </div>
 
           <div class="col-md-3">
             <div class="stats-card">
               <h3>Users</h3>
-              <div class="number" th:text="${userCount ?: '428'}">428</div>
+              <div class="number" th:text="${totalUsers ?: '428'}">428</div>
             </div>
           </div>
         </div>

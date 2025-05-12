@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +12,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" th:href="@{/css/accomodation.css}" />
 </head>
+
 <body>
   <!-- Navbar -->
   <div th:replace="~{fragments/user_navbar :: navbar}"></div>
@@ -18,23 +20,27 @@
   <br>
   <br>
 
-  <!-- Success/Error Message -->
-  <div class="container mt-3">
-    <div class="alert alert-success" th:if="${successMessage != null}" th:text="${successMessage}"></div>
-    <div class="alert alert-danger" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
-  </div>
 
   <!-- Hotel Listings -->
   <section class="listing-section py-5 bg-light">
     <div class="container">
+      <!-- Alert for Success/Error Messages -->
+      <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
       <h2 class="text-center mb-5">Available Hotels</h2>
       <div class="row g-4">
         <!-- Dynamic Hotel Cards -->
         <div class="col-md-4 col-sm-6" th:each="hotel : ${hotels}">
           <div class="card accommodation-card shadow">
             <img th:src="${hotel.imagePath != null ? hotel.imagePath : '/img/placeholder.jpg'}"
-                 class="card-img-top img-fluid orange-border" style="height: 200px; width: 100%; object-fit: cover;"
-                 th:alt="${hotel.name}">
+              class="card-img-top img-fluid orange-border" style="height: 200px; width: 100%; object-fit: cover;"
+              th:alt="${hotel.name}">
             <div class="card-body">
               <h5 class="card-title" th:text="${hotel.name}"></h5>
               <p class="card-text" th:text="${hotel.description}"></p>
@@ -42,11 +48,9 @@
                 ⭐ <span th:text="${hotel.rating != null ? hotel.rating : 'N/A'}"></span> |
                 ₹<span th:text="${hotel.startingPrice != null ? hotel.startingPrice : 'N/A'}" />/Night
               </p>
-              <a href="#" class="btn btn-sm btn-warning"
-                 th:data-hotel-name="${hotel.name}"
-                 th:data-hotel-price="${hotel.startingPrice}"
-                 onclick="showReceipt(this)"
-                 data-bs-toggle="modal" data-bs-target="#receiptModal">Book Now</a>
+              <a href="#" class="btn btn-sm btn-warning" th:data-hotel-name="${hotel.name}"
+                th:data-hotel-price="${hotel.startingPrice}" onclick="showReceipt(this)" data-bs-toggle="modal"
+                data-bs-target="#receiptModal">Book Now</a>
             </div>
           </div>
         </div>
@@ -80,7 +84,7 @@
             <div class="mb-3">
               <label for="adultsCount" class="form-label">Adult Count</label>
               <select id="adultsCount" name="adultsCount" class="form-control" th:field="*{adultsCount}" required
-                      onchange="updateTotal()">
+                onchange="updateTotal()">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -92,7 +96,7 @@
             <div class="mb-3">
               <label for="childrenCount" class="form-label">Children Count</label>
               <select id="childrenCount" name="childrenCount" class="form-control" th:field="*{childrenCount}"
-                      onchange="updateTotal()">
+                onchange="updateTotal()">
                 <option value="0" selected>0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -104,13 +108,13 @@
             <div class="mb-3">
               <label for="checkIn" class="form-label">Check-in Date</label>
               <input type="date" id="checkIn" class="form-control" th:field="*{checkIn}" required
-                     onchange="updateTotal()" />
+                onchange="updateTotal()" />
             </div>
 
             <div class="mb-3">
               <label for="checkOut" class="form-label">Check-out Date</label>
               <input type="date" id="checkOut" class="form-control" th:field="*{checkOut}" required
-                     onchange="updateTotal()" />
+                onchange="updateTotal()" />
             </div>
 
             <div class="mb-3">
@@ -131,76 +135,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
-  <script>
-    // Store the current hotel details
-    let currentHotel = {
-      name: '',
-      price: 0
-    };
+  <script th:src="@{/javascript/user.js}"></script>
 
-    function showReceipt(element) {
-      // Get the hotel details from data attributes
-      const hotelName = element.getAttribute('data-hotel-name');
-      const hotelPrice = parseFloat(element.getAttribute('data-hotel-price'));
-
-      // Set the current hotel details
-      currentHotel.name = hotelName;
-      currentHotel.price = hotelPrice;
-
-      // Update the modal display
-      document.getElementById("modalHotelName").textContent = hotelName;
-      document.getElementById("hotelName").value = hotelName;
-      document.getElementById("hotelPrice").value = hotelPrice;
-
-      // Reset form fields
-      document.getElementById("adultsCount").value = 1;
-      document.getElementById("childrenCount").value = 0;
-      document.getElementById("checkIn").value = '';
-      document.getElementById("checkOut").value = '';
-      document.getElementById('totalAmount').textContent = '0';
-    }
-
-    function updateTotal() {
-      // Get all required values
-      const checkIn = document.getElementById('checkIn').value;
-      const checkOut = document.getElementById('checkOut').value;
-
-      // Only calculate if both dates are selected
-      if (!checkIn || !checkOut) {
-        document.getElementById('totalAmount').textContent = '0';
-        return;
-      }
-
-      // Parse dates
-      const checkInDate = new Date(checkIn);
-      const checkOutDate = new Date(checkOut);
-
-      // Calculate night difference
-      const timeDiff = checkOutDate - checkInDate;
-      const totalNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-      // Validate dates
-      if (totalNights <= 0) {
-        alert("Check-out date must be after check-in date.");
-        document.getElementById('totalAmount').textContent = '0';
-        return;
-      }
-
-      // Calculate total amount
-      const totalAmount = totalNights * currentHotel.price;
-
-      // Update the display
-      document.getElementById('totalAmount').textContent = totalAmount;
-    }
-
-    // Add event listeners after DOM loads
-    document.addEventListener('DOMContentLoaded', function () {
-      // Ensure updateTotal runs on any relevant change
-      document.getElementById('checkIn').addEventListener('change', updateTotal);
-      document.getElementById('checkOut').addEventListener('change', updateTotal);
-      document.getElementById('adultsCount').addEventListener('change', updateTotal);
-      document.getElementById('childrenCount').addEventListener('change', updateTotal);
-    });
-  </script>
 </body>
+
 </html>

@@ -79,7 +79,7 @@
                             </div>
                         </div>
 
-                        <!-- Alert Messages -->
+                        <!-- Alert for Success/Error Messages -->
                         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
                             role="alert">
                             <span th:text="${successMessage}"></span>
@@ -152,7 +152,8 @@
                                                         <th>Category</th>
                                                         <th>Capacity</th>
                                                         <th>Price/Night</th>
-                                                        <th>Status</th>
+                                                        <th>Hotel</th>
+                                                        <!-- <th>Status</th> -->
                                                         <th class="text-center">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -166,12 +167,13 @@
                                                         <td th:text="${room.category}">AC</td>
                                                         <td th:text="${room.capacity}">2</td>
                                                         <td>₹<span th:text="${room.pricePerNight}">1500.00</span></td>
-                                                        <td>
+                                                        <!-- <td>
                                                             <span th:if="${room.available}"
                                                                 class="badge bg-success status-badge">Available</span>
                                                             <span th:unless="${room.available}"
                                                                 class="badge bg-danger status-badge">Occupied</span>
-                                                        </td>
+                                                        </td> -->
+                                                        <td th:text="${room.hotel.name}">Hotel Name</td>
                                                         <td>
                                                             <div
                                                                 class="action-buttons d-flex justify-content-center gap-2">
@@ -264,32 +266,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set up delete modal
-            const deleteButtons = document.querySelectorAll('.delete-room-btn');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const roomId = this.getAttribute('data-room-id');
-                    const roomNumber = this.getAttribute('data-room-number');
+    <script th:src="@{/javascript/user.js}"></script>
 
-                    document.getElementById('roomIdToDelete').value = roomId;
-                    document.getElementById('deleteRoomNumber').textContent = roomNumber;
-                });
-            });
-
-            // Auto-dismiss alerts after 5 seconds
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    const closeButton = alert.querySelector('.btn-close');
-                    if (closeButton) {
-                        closeButton.click();
-                    }
-                }, 5000);
-            });
-        });
-    </script>
 </body>
 
 </html>

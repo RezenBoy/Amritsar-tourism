@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Booking;
-import com.mgcfgs.amritsartourism.amritsar_tourism.model.Hotel;
-import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
+import com.mgcfgs.amritsartourism.amritsar_tourism.model.BookingHistory;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
+import com.mgcfgs.amritsartourism.amritsar_tourism.repository.BookingHistoryRepository;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.BookingRepository;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.RoomRepository;
 
@@ -23,6 +21,9 @@ public class BookingService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private BookingHistoryRepository bookingHistoryRepository;
 
     public List<Room> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, String hotelName) {
         return roomRepository.findAvailableRooms(checkIn, checkOut, hotelName);
@@ -53,27 +54,19 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
 
-    public Page<Booking> getBookings(Pageable pageable, String status) {
-        if (status == null || status.isEmpty()) {
-            return bookingRepository.findAll(pageable);
-        } else {
-            return bookingRepository.findByStatus(status.toUpperCase(), pageable);
-        }
-    }
+    public void saveBookingHistory(Booking booking) {
+        BookingHistory bookingHistory = new BookingHistory();
+        bookingHistory.setUserId(booking.getUser().getId());
+        bookingHistory.setUserName(booking.getUser().getName());
+        bookingHistory.setUserEmail(booking.getUser().getEmail());
+        // bookingHistory.setHotelId(booking.getHotelId());
+        bookingHistory.setHotelName(booking.getHotelName());
+        bookingHistory.setRoomId(booking.getRoom().getId());
+        bookingHistory.setRoomNumber(booking.getRoom().getRoomNumber());
+        bookingHistory.setBookingDate(LocalDate.now().toString());
+        bookingHistory.setCheckInDate(booking.getCheckIn().toString());
+        bookingHistory.setCheckOutDate(booking.getCheckOut().toString());
 
-    public void saveBookingHistory(Booking booking, RegisterUser user, Room room, Hotel hotel) {
-        Booking bookingHistory = new Booking();
-        // bookingHistory.setUserId(user.getId());
-        // bookingHistory.setUserName(user.getName());
-        // bookingHistory.setUserEmail(user.getEmail());
-        // bookingHistory.setHotelId(hotel.getId());
-        // bookingHistory.setHotelName(hotel.getHotelName());
-        // bookingHistory.setRoomId(room.getId());
-        // bookingHistory.setRoomNumber(room.getRoomNumber());
-        // bookingHistory.setBookingDate(LocalDate.now().toString());
-        // bookingHistory.setCheckInDate(booking.getCheckInDate().toString());
-        // bookingHistory.setCheckOutDate(booking.getCheckOutDate().toString());
-
-        bookingRepository.save(bookingHistory);
+        bookingHistoryRepository.save(bookingHistory);
     }
 }

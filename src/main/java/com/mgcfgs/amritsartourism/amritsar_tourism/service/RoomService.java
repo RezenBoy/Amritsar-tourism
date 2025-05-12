@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.Room;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.RoomRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class RoomService {
 
@@ -22,6 +24,7 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
+    @Transactional
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }

@@ -111,6 +111,7 @@ public class HomeController {
             booking.setStatus("Confirmed");
 
             // 7. Save the booking
+            bookingService.saveBookingHistory(booking);
             bookingService.saveBooking(booking);
 
             redirectAttributes.addFlashAttribute("successMessage",

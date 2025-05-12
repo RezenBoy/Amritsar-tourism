@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mgcfgs.amritsartourism.amritsar_tourism.model.BookingHistory;
 import com.mgcfgs.amritsartourism.amritsar_tourism.model.RegisterUser;
 import com.mgcfgs.amritsartourism.amritsar_tourism.repository.UserRepository;
 
@@ -42,14 +43,14 @@ public class UserServices {
     public void updateUserProfile(Long userId, String name, String email) {
         RegisterUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        
+
         // Validate email uniqueness if changed
         if (!user.getEmail().equals(email)) {
             if (userRepository.existsByEmail(email)) {
                 throw new RuntimeException("Email " + email + " is already in use");
             }
         }
-        
+
         user.setName(name);
         user.setEmail(email);
         userRepository.save(user);
@@ -64,7 +65,7 @@ public class UserServices {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
         return user;
         // return userRepository.findById(id)
-        //         .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+        // .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
     }
 
     public List<RegisterUser> getAllUsers() {
@@ -76,6 +77,7 @@ public class UserServices {
         // This method deletes a user from the database.
         userRepository.delete(user);
     }
+
     public RegisterUser getUserByEmail(String email) {
         // This method retrieves a user by their email address.
         return userRepository.findByEmail(email);
@@ -93,6 +95,11 @@ public class UserServices {
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
         userRepository.save(existingUser);
+    }
+
+    public List<BookingHistory> getBookingHistory(Long id) {
+        // This method retrieves the booking history for a specific user.
+        return userRepository.getBookingHistory(id);
     }
 
 }
