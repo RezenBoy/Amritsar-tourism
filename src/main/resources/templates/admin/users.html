@@ -58,7 +58,15 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2>Manage Users</h2>
         </div>
-
+        <!-- Alert Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+          <span th:text="${successMessage}"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <span th:text="${errorMessage}"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -94,42 +102,19 @@
                         data-bs-target="#viewUserModal">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                      <!-- <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteUserModal">
                         <i class="bi bi-trash"></i>
+                      </button> -->
+                      <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteUserModal" th:attr="data-user-id=${user.id}, data-user-name=${user.name}"
+                        onclick="openDeleteModal(this)">
+                        <i class="bi bi-trash"></i>
                       </button>
+
                     </div>
                   </td>
                 </tr>
-
-                <!-- Sample data if no users are provided -->
-                <div th:each="i : ${#numbers.sequence(1, 5)}">
-                  <tr th:if="${users == null || users.empty}">
-                    <td th:text="${i}"></td> <!-- Serial number -->
-                    <td><span th:text="${i}"></span></td>
-                    <td>abc</td>
-                    <td>abc@example.com</td>
-                    <td><span class="user-role role-user">User</span></td>
-
-                    <td>
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                          data-bs-target="#viewUserModal">
-                          <i class="bi bi-eye"></i>
-                        </button>
-                        <!-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                          data-bs-target="#editUserModal">
-                          <i class="bi bi-pencil"></i>
-                        </button> -->
-                        <!-- Delete button for each user in a table -->
-                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                          data-bs-target="#deleteUserModal">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </div>
               </tbody>
             </table>
           </div>
@@ -170,7 +155,7 @@
           <div class="row mb-3">
             <div class="col-sm-6 mb-3">
               <label class="form-label text-muted">Email:</label>
-              <p class="fw-bold" th:text="${user?.email} ?: 'user@example.com'">gurpreet@example.com</p>
+              <p class="fw-bold" th:text="${user?.email} ?: 'user@example.com'">abc@example.com</p>
             </div>
             <div class="col-sm-6 mb-3">
               <label class="form-label text-muted">Phone:</label>
@@ -239,16 +224,35 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <form id="deleteUserForm" th:action="@{/admin/users/delete/${user.id}}" method="post">
-            <input type="hidden" name="id" id="delete-user-id" th:value="${deleteUserForm}" />
+          <form id="deleteUserForm" method="post">
+            <input type="hidden" name="id" id="delete-user-id" />
             <button type="submit" class="btn btn-danger">Delete User</button>
           </form>
+
         </div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function openDeleteModal(button) {
+      const userId = button.getAttribute("data-user-id");
+      const userName = button.getAttribute("data-user-name");
+
+      // Set text in modal
+      document.getElementById("deleteUserId").textContent = userId;
+      document.getElementById("deleteUserName").textContent = userName;
+
+      // Set form input value
+      document.getElementById("delete-user-id").value = userId;
+
+      // Set form action dynamically
+      const form = document.getElementById("deleteUserForm");
+      form.action = `/admin/users/delete/${userId}`;
+    }
+  </script>
+
 </body>
 
 </html>

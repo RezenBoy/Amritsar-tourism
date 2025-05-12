@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,18 +69,20 @@ public class AdminController {
         return "admin/users"; // Would point to templates/admin/users.html
     }
 
-    @PostMapping("/users/delete")
-    public String deleteUser(
-            @RequestParam("id") Long id,
-            RedirectAttributes redirectAttributes) {
-        try {
-            userService.deleteUserById(id);
-            redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error deleting user: " + e.getMessage());
-        }
-        return "redirect:/admin/users";
-    }
+    // @PostMapping("/users/delete")
+    // public String deleteUser(
+    // @RequestParam("id") Long id,
+    // RedirectAttributes redirectAttributes) {
+    // try {
+    // userService.deleteUserById(id);
+    // redirectAttributes.addFlashAttribute("message", "User deleted
+    // successfully!");
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("error", "Error deleting user: " +
+    // e.getMessage());
+    // }
+    // return "redirect:/admin/users";
+    // }
 
     @GetMapping("/bookings")
     public String showHotelsPage(Model model) {
@@ -233,6 +236,18 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete booking: " + e.getMessage());
         }
         return "redirect:/admin/bookings";
+    }
+
+    @PostMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "The user could not be deleted: because it is linked to a booking");
+        }
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/hotels/{id}/edit") // Now this will be /admin/hotels/{id}/edit
