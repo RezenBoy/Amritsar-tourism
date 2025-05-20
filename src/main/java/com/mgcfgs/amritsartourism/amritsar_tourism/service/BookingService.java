@@ -59,6 +59,9 @@ public class BookingService {
         bookingHistory.setUserId(booking.getUser().getId());
         bookingHistory.setUserName(booking.getUser().getName());
         bookingHistory.setUserEmail(booking.getUser().getEmail());
+        bookingHistory.setAdultCount(booking.getAdultsCount());
+        bookingHistory.setChildCount(booking.getChildrenCount());
+        bookingHistory.setBookingId(booking.getId());
         // bookingHistory.setHotelId(booking.getHotelId());
         bookingHistory.setHotelName(booking.getHotelName());
         bookingHistory.setRoomId(booking.getRoom().getId());

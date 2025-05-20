@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Users - Amritsar Tourism</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="css/admin.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Hotels - Admin Panel</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
   <style>
     .admin-header {
       background-color: #d2691e;
-      /* Orange/brown color similar to your screenshot */
       color: white;
       padding: 15px;
       font-weight: bold;
@@ -19,7 +21,6 @@
 
     .admin-sidebar {
       background-color: #343a40;
-      /* Dark color similar to your screenshot */
       color: white;
       min-height: 100vh;
       padding: 0;
@@ -51,159 +52,118 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Include sidebar fragment -->
-      <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='users'"></div>
+      <div th:replace="~{fragments/admin_layout :: adminSidebar}" th:with="currentPage='hotels'" class="col-md-2">
+      </div>
 
       <!-- Main content area -->
-      <main class="col-md-10 admin-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2>Manage Users</h2>
-        </div>
-        <!-- Alert for Success/Error Messages -->
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-          <span th:text="${successMessage}"></span>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-          <span th:text="${errorMessage}"></span>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>S.No</th> <!-- New Serial Number column -->
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
+      <main class="col-md-10">
+        <div class="admin-content">
+          <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h2>Manage Users</h2>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Manage Users</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
 
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Dynamically populated rows -->
-                <tr th:each="user, iterStat : ${users}" th:if="${iterStat.index < 10 and user.role != 'ADMIN'}">
+            <!-- Alert for Success/Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+              <span th:text="${successMessage}"></span>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <span th:text="${errorMessage}"></span>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-                  <td th:text="${iterStat.count}">1</td> <!-- Serial number -->
-                  <td th:text="${user?.id}">1</td>
-                  <td th:text="${user?.name ?: 'User ' + iterStat.count}">abc</td>
-                  <td th:text="${user?.email ?: 'user' + iterStat.count + '@example.com'}">abc@example.com</td>
-                  <td>
-                    <span class="user-role" th:classappend="${user.role == 'ADMIN'} ? 'role-admin' : 'role-user'"
-                      th:text="${user.role == 'ADMIN'} ? 'Admin' : 'User'">
-                      User
-                    </span>
-                  </td>
+            <!-- Users Table -->
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Users List</span>
+                <span class="badge bg-primary" th:text="${users != null ? users.size() : 0} + ' Users(s)'"></span>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>S.No</th> <!-- New Serial Number column -->
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
 
-                  <td>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                        data-bs-target="#viewUserModal">
-                        <i class="bi bi-eye"></i>
-                      </button>
-                      <!-- <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteUserModal">
-                        <i class="bi bi-trash"></i>
-                      </button> -->
-                      <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteUserModal" th:attr="data-user-id=${user.id}, data-user-name=${user.name}"
-                        onclick="openDeleteModal(this)">
-                        <i class="bi bi-trash"></i>
-                      </button>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:if="${users == null || users.empty}">
+                        <td colspan="6" class="text-center">No users found</td>
+                      </tr>
+                      <tr th:each="user, iterStat : ${users}" th:if="${iterStat.index < 10 and user.role != 'ADMIN'}">
 
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                        <td th:text="${iterStat.count}">1</td> <!-- Serial number -->
+                        <td th:text="${user?.id}">1</td>
+                        <td th:text="${user?.name ?: 'User ' + iterStat.count}">abc</td>
+                        <td th:text="${user?.email ?: 'user' + iterStat.count + '@example.com'}">abc@example.com</td>
+                        <td>
+                          <span class="user-role" th:classappend="${user.role == 'ADMIN'} ? 'role-admin' : 'role-user'"
+                            th:text="${user.role == 'ADMIN'} ? 'Admin' : 'User'">
+                            User
+                          </span>
+                        </td>
+
+                        <td>
+                          <div class="action-buttons d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-sm btn-danger delete-room-btn" data-bs-toggle="modal"
+                              data-bs-target="#deleteUserModal"
+                              th:attr="data-user-id=${user.id}, data-user-name=${user.name}"
+                              onclick="openDeleteModal(this)">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav th:if="${totalPages > 1}" aria-label="Page navigation">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                      <a class="page-link"
+                        th:href="@{/admin/managehotels(page=${currentPage - 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                        aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                      </a>
+                    </li>
+                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                      th:classappend="${pageNumber == currentPage} ? 'active'">
+                      <a class="page-link"
+                        th:href="@{/admin/managehotels(page=${pageNumber}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                        th:text="${pageNumber}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                      <a class="page-link"
+                        th:href="@{/admin/managehotels(page=${currentPage + 1}, size=${size}, hotelName=${param.hotelName}, rating=${param.rating})}"
+                        aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
           </div>
-
-          <!-- Pagination -->
-          <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-              </li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
-            </ul>
-          </nav>
         </div>
       </main>
-    </div>
-  </div>
-
-  <!-- View User Modal -->
-  <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-orange text-white">
-          <h5 class="modal-title" id="viewUserModalLabel">User Details</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-4">
-            <h3 class="text-orange" th:text="${user?.name} ?: 'User Name'">User</h3>
-            <p class="text-muted">User ID: <span th:text="${user?.id} ?: '1'">1</span></p>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-sm-6 mb-3">
-              <label class="form-label text-muted">Email:</label>
-              <p class="fw-bold" th:text="${user?.email} ?: 'user@example.com'">abc@example.com</p>
-            </div>
-            <div class="col-sm-6 mb-3">
-              <label class="form-label text-muted">Phone:</label>
-              <p class="fw-bold" th:text="${user?.phone} ?: '+91 9876543210'">+91 9876543210</p>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-sm-6 mb-3">
-              <label class="form-label text-muted">Role:</label>
-              <p class="fw-bold">
-                <span class="badge bg-orange-light text-orange-dark" th:text="${user?.role} ?: 'User'">Admin</span>
-              </p>
-            </div>
-            <!-- Status section removed here -->
-            <div class="col-sm-6 mb-3">
-              <label class="form-label text-muted">Registered On:</label>
-              <p class="fw-bold" th:text="${#temporals.format(user?.registeredOn, 'dd MMM yyyy')} ?: '15 Mar 2023'">15
-                Mar 2023</p>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-sm-6 mb-3">
-              <label class="form-label text-muted">Last Login:</label>
-              <p class="fw-bold"
-                th:text="${#temporals.format(user?.lastLogin, 'dd MMM yyyy hh:mm a')} ?: '22 Apr 2023 10:30 AM'">22 Apr
-                2023 10:30 AM</p>
-            </div>
-            <!-- Empty column to maintain layout balance -->
-            <div class="col-sm-6 mb-3"></div>
-          </div>
-
-          <div class="mb-3" th:if="${user?.address}">
-            <label class="form-label text-muted">Address:</label>
-            <p class="fw-bold" th:text="${user.address}">123 Temple Road, Amritsar</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            <i class="fas fa-times me-1"></i> Close
-          </button>
-          <button type="button" class="btn btn-orange text-white" data-bs-toggle="modal"
-            data-bs-target="#editUserModal">
-            <i class="fas fa-edit me-1"></i> Edit
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 

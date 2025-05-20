@@ -10,7 +10,8 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/admin.css" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+
     <style>
         .admin-header {
             background-color: #d2691e;
@@ -138,7 +139,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span>Room List</span>
+                                        <span style="font-weight: bold;">Room List</span>
                                         <span class="badge bg-primary"
                                             th:text="${rooms != null ? rooms.size() : 0} + ' Room(s)'"></span>
                                     </div>

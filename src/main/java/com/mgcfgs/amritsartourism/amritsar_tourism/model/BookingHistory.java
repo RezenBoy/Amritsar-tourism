@@ -24,8 +24,8 @@ public class BookingHistory {
     // Room details
     private Long roomId;
     private String roomNumber;
-    private Long adultCount;
-    private Long childCount;
+    private Integer adultCount;
+    private Integer childCount;
 
     // Booking details
     private Long bookingId;
@@ -107,19 +107,19 @@ public class BookingHistory {
         this.roomNumber = roomNumber;
     }
 
-    public Long getAdultCount() {
+    public Integer getAdultCount() {
         return adultCount;
     }
 
-    public void setAdultCount(Long adultCount) {
+    public void setAdultCount(Integer adultCount) {
         this.adultCount = adultCount;
     }
 
-    public Long getChildCount() {
+    public Integer getChildCount() {
         return childCount;
     }
 
-    public void setChildCount(Long childCount) {
+    public void setChildCount(Integer childCount) {
         this.childCount = childCount;
     }
 
